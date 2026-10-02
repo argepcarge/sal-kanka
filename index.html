@@ -1775,8 +1775,14 @@
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
             await navigator.share({ files: [file], title: 'Günün Mesajı' });
-          } catch (e) { fallbackDownload(blob); }
-        } else { fallbackDownload(blob); }
+          } catch (e) {
+            // Kullanıcı paylaşım menüsünü bilerek kapattıysa (İptal / Vazgeç) indirme yapma
+            if (e.name === 'AbortError') return;
+            fallbackDownload(blob);
+          }
+        } else {
+          fallbackDownload(blob);
+        }
       }, 'image/png');
     }
 

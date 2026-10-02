@@ -1,29 +1,29 @@
-const CACHE_NAME = 'sansa-birak-v1';
-const ASSETS_TO_CACHE = [
-  './',
-  './index.html',
+const CACHE_NAME = 'sansa-birak-v2';
+const STATIC_ASSETS = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png'
 ];
 
-// Install Event
+// Install: Yeni versiyon geldiğinde hemen yükle ve bekleme
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+      return cache.addAll(STATIC_ASSETS);
+    })
   );
 });
 
-// Activate Event
+// Activate: Eski önbellekleri anında temizle ve tüm sekmeleri devral
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keyList) => {
+    caches.keys().then((keys) => {
       return Promise.all(
-        keyList.map((key) => {
+        keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('Eski önbellek silindi:', key);
             return caches.delete(key);
           }
         })
@@ -32,33 +32,39 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event (Cache First, fallback to Network)
+// Fetch: HTML için NETWORK-FIRST stratejisi (İnternet varsa her zaman GitHub'dan son sürümü çek)
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        // Dynamic caching for runtime assets if valid
-        if (
-          !networkResponse ||
-          networkResponse.status !== 200 ||
-          networkResponse.type !== 'basic'
-        ) {
+  const req = event.request;
+
+  if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(req)
+        .then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const clone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+          }
           return networkResponse;
+        })
+        .catch(() => {
+          return caches.match(req).then((cached) => cached || caches.match('./index.html'));
+        })
+    );
+    return;
+  }
+
+  // Statik dosyalar için Stale-While-Revalidate
+  event.respondWith(
+    caches.match(req).then((cached) => {
+      const fetchPromise = fetch(req).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const clone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
         }
-        const responseToCache = networkResponse.clone();
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
         return networkResponse;
-      }).catch(() => {
-        // Fallback for HTML pages
-        if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('./index.html');
-        }
-      });
+      }).catch(() => {});
+
+      return cached || fetchPromise;
     })
   );
 });

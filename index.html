@@ -722,7 +722,10 @@
     // ==========================================
     // 📸 INSTAGRAM STORY: MOBİL VE PC'DE GARANTİLİ MERKEZİ BANNER
     // ==========================================
-    function drawPerfectCenterText(ctx, text, y, font, color, maxW) {
+    // ==========================================
+    // 📸 INSTAGRAM STORY: KOPYALA & YAPIŞTIR STICKER SİSTEMİ
+    // ==========================================
+    function drawPerfectCenterText(ctx, text, y, font, color, canvasW, maxW) {
       ctx.save();
       ctx.font = font;
       ctx.fillStyle = color;
@@ -731,106 +734,172 @@
       
       const textWidth = ctx.measureText(text).width;
       if (maxW && textWidth > maxW) {
-        const startX = (1080 - maxW) / 2;
+        const startX = (canvasW - maxW) / 2;
         ctx.fillText(text, startX, y, maxW);
       } else {
-        const startX = (1080 - textWidth) / 2;
+        const startX = (canvasW - textWidth) / 2;
         ctx.fillText(text, startX, y);
       }
       ctx.restore();
     }
 
+    function showStickerToast(msg) {
+      let toast = document.getElementById('stickerToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'stickerToast';
+        toast.style.cssText = `
+          position: fixed;
+          top: 24px;
+          left: 50%;
+          transform: translateX(-50%) translateY(-20px);
+          background: rgba(19, 27, 46, 0.95);
+          border: 2px solid #f43f5e;
+          box-shadow: 0 10px 30px rgba(244, 63, 94, 0.5);
+          color: #fff;
+          padding: 14px 22px;
+          border-radius: 18px;
+          font-size: 14px;
+          font-weight: 800;
+          text-align: center;
+          z-index: 9999;
+          opacity: 0;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          pointer-events: none;
+          max-width: 90%;
+          line-height: 1.45;
+        `;
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = msg;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      vibrate([40, 60, 40]);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-20px)';
+      }, 3500);
+    }
+
     async function shareToInstagramStory() {
       vibrate(30);
 
-      // Tam banner boyutu: 1080 x 420
+      // Sticker Ölçüleri: 920 x 360 px (Şeffaf arka planlı kompakt sticker)
+      const canvasW = 920;
+      const canvasH = 360;
       const canvas = document.createElement('canvas');
-      canvas.width = 1080;
-      canvas.height = 420;
+      canvas.width = canvasW;
+      canvas.height = canvasH;
       const ctx = canvas.getContext('2d');
 
-      // 1. Arka planı tuvalin TAMAMINA (0,0,1080,420) yay — Dışarıda ASLA siyah boşluk kalmaz!
-      const grad = ctx.createLinearGradient(0, 0, 1080, 420);
-      grad.addColorStop(0, '#19061c');
+      // Tuvali temizle (Şeffaf PNG başlangıcı)
+      ctx.clearRect(0, 0, canvasW, canvasH);
+
+      // Sticker Arka Planı (Şık neon kenarlı koyu bordo kart)
+      const bX = 12, bY = 12, bW = canvasW - 24, bH = canvasH - 24, bR = 28;
+      ctx.save();
+      const grad = ctx.createLinearGradient(bX, bY, bX + bW, bY + bH);
+      grad.addColorStop(0, '#1c081e');
       grad.addColorStop(0.5, '#2e0a24');
       grad.addColorStop(1, '#0e0419');
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, 1080, 420);
 
-      // 2. Şık İç Neon Çerçeve (Banner'ın içine oturtulmuş)
-      const bX = 16, bY = 16, bW = 1048, bH = 388, bR = 26;
-      ctx.save();
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 5;
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
         ctx.roundRect(bX, bY, bW, bH, bR);
       } else {
         ctx.rect(bX, bY, bW, bH);
       }
+      ctx.fill();
+
+      // Neon Çerçeve
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 5;
       ctx.stroke();
       ctx.restore();
 
-      // 3. En üstte: Sadece #ŞansaBırak (Tam Merkez)
+      // 1. En Üst Etiket: #ŞansaBırak
       drawPerfectCenterText(
         ctx, 
         '#ŞansaBırak', 
-        68, 
-        'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+        60, 
+        'bold 22px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
         '#fda4af', 
-        900
+        canvasW, 
+        800
       );
 
-      // 4. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ! (Punto 42px, tam merkez)
+      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ!
       drawPerfectCenterText(
         ctx, 
         'BAŞARIYLA BOŞ VERİLDİ! 🛋️', 
-        140, 
-        '900 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+        125, 
+        '900 38px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
         '#ffffff', 
-        920
+        canvasW, 
+        820
       );
 
-      // 5. Ortadaki Absürt Cümle
-      const fontDetail = '600 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      // 3. Ortadaki Detay Cümlesi
+      const fontDetail = '600 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.font = fontDetail;
-      const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 880);
+      const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 780);
       detLines.forEach((l, i) => {
-        drawPerfectCenterText(ctx, l, 210 + (i * 36), fontDetail, '#fbcfe8', 900);
+        drawPerfectCenterText(ctx, l, 185 + (i * 32), fontDetail, '#fbcfe8', canvasW, 800);
       });
 
-      // 6. Kesikli İnce Ayraç Çizgisi
+      // Kesikli Çizgi
       ctx.save();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.lineWidth = 2;
-      ctx.setLineDash([10, 8]);
+      ctx.setLineDash([8, 6]);
       ctx.beginPath();
-      ctx.moveTo(100, 310);
-      ctx.lineTo(980, 310);
+      ctx.moveTo(80, 270);
+      ctx.lineTo(canvasW - 80, 270);
       ctx.stroke();
       ctx.restore();
 
-      // 7. En altta: Sadece boşveriş sayısı ("X kere boşverdi ✨")
+      // 4. En Altta: X kere boşverdi ✨
       drawPerfectCenterText(
         ctx, 
         `${totalBosverCount} kere boşverdi ✨`, 
-        360, 
-        '900 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+        310, 
+        '900 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
         '#34d399', 
-        900
+        canvasW, 
+        800
       );
 
       canvas.toBlob(async (blob) => {
-        const file = new File([blob], 'bosverildi-banner.png', { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        let copied = false;
+
+        // 1. ADIM: Doğrudan Panoya (Clipboard) Şeffaf Sticker Olarak Kopyala
+        if (navigator.clipboard && window.ClipboardItem) {
           try {
-            await navigator.share({ files: [file], title: 'Başarıyla Boş Verildi!' });
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            copied = true;
+            showStickerToast('📋 <strong>Sticker Kopyalandı!</strong><br>Instagram Hikayeni aç ve ekrana <u>Yapıştır</u> de ✨');
           } catch (e) {
-            if (e.name === 'AbortError') return;
+            copied = false;
+          }
+        }
+
+        // 2. ADIM: Pano desteklenmezse veya engellendiyse Web Share API / İndirme
+        if (!copied) {
+          const file = new File([blob], 'bosverildi-sticker.png', { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({ files: [file], title: 'Boş Ver Sticker' });
+            } catch (e) {
+              if (e.name === 'AbortError') return;
+              fallbackDownload(blob);
+            }
+          } else {
             fallbackDownload(blob);
           }
-        } else {
-          fallbackDownload(blob);
         }
       }, 'image/png');
     }

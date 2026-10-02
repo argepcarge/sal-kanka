@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Şansa Bırak | Karar Verme & Günün Şans Kartı</title>
+  <title>Şansa Bırak | Karar Verme & Parti Oyunları</title>
   <meta name="theme-color" content="#090d16">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Günün şans falı, tavsiyesi ve eğlenceli karar çarkı!">
+  <meta name="description" content="Günün şans falı, mistik küre, karar çarkı ve eğlenceli parti oyunları!">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="ŞansaBırak">
@@ -23,6 +23,8 @@
       --pink: #ec4899;
       --amber: #f59e0b;
       --emerald: #10b981;
+      --rose: #f43f5e;
+      --purple: #a855f7;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -46,7 +48,7 @@
       padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* iOS Saat / Çentik Çakışmasını Engelleyen Header */
+    /* iOS Saat & Çentik Çakışmasını Engelleyen Header */
     header {
       padding: 12px 18px;
       padding-top: calc(max(env(safe-area-inset-top, 0px), 44px) + 8px);
@@ -97,7 +99,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Header Versiyon Rozeti */
     .version-badge {
       font-size: 10px;
       font-weight: 700;
@@ -106,7 +107,6 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       padding: 2px 6px;
       border-radius: 6px;
-      letter-spacing: 0.3px;
     }
 
     .header-actions {
@@ -129,9 +129,7 @@
       transition: all 0.2s ease;
     }
 
-    .icon-btn:active {
-      transform: scale(0.92);
-    }
+    .icon-btn:active { transform: scale(0.92); }
 
     main {
       flex: 1;
@@ -144,23 +142,29 @@
       gap: 14px;
     }
 
-    .ad-slot {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 9px;
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-muted);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+    /* ANA TAB BÖLÜMLERİ */
+    .main-tab-view {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeIn 0.25s ease forwards;
     }
 
+    .main-tab-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* GÜNÜN ŞANS KARTI */
     .daily-card {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15));
       border: 1px solid rgba(236, 72, 153, 0.35);
-      border-radius: 20px;
-      padding: 16px;
+      border-radius: 22px;
+      padding: 18px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
@@ -170,7 +174,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .daily-card-badge {
@@ -191,18 +195,15 @@
       font-size: 12px;
       color: var(--text-muted);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
 
     .daily-quote {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
-      line-height: 1.45;
+      line-height: 1.5;
       color: #f8fafc;
-      margin-bottom: 14px;
-      min-height: 44px;
+      margin-bottom: 16px;
+      min-height: 48px;
     }
 
     .daily-metrics {
@@ -210,36 +211,23 @@
       grid-template: 1fr / repeat(3, 1fr);
       gap: 8px;
       background: rgba(15, 23, 42, 0.5);
-      border-radius: 12px;
-      padding: 8px;
-      margin-bottom: 12px;
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 14px;
     }
 
-    .metric-box {
-      text-align: center;
-    }
-
-    .metric-label {
-      font-size: 10px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-    }
-
-    .metric-value {
-      font-size: 14px;
-      font-weight: 800;
-      color: #fff;
-      margin-top: 2px;
-    }
+    .metric-box { text-align: center; }
+    .metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+    .metric-value { font-size: 15px; font-weight: 800; color: #fff; margin-top: 3px; }
 
     .insta-share-btn {
       width: 100%;
       background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
       color: #fff;
       border: none;
-      padding: 10px;
-      border-radius: 12px;
-      font-size: 13px;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 14px;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -247,34 +235,184 @@
       gap: 8px;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(220, 39, 67, 0.35);
-      transition: transform 0.15s ease;
+    }
+    .insta-share-btn:active { transform: scale(0.97); }
+
+    /* MİSTİK KARAR KÜRESİ KARTI */
+    .mystic-card {
+      background: linear-gradient(145deg, #131b2e 0%, #1e1b4b 100%);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 22px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
-    .insta-share-btn:active {
-      transform: scale(0.97);
+    .mystic-header {
+      text-align: center;
     }
 
-    .tab-section {
+    .mystic-badge {
+      display: inline-block;
+      background: linear-gradient(90deg, #8b5cf6, #d946ef);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .mystic-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .orb-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 8px auto;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mystic-orb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #a855f7 0%, #4c1d95 40%, #1e1145 75%, #09031d 100%);
+      box-shadow: 
+        0 0 35px rgba(168, 85, 247, 0.5),
+        inset -10px -10px 25px rgba(0, 0, 0, 0.8),
+        inset 10px 10px 20px rgba(255, 255, 255, 0.35);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      transition: transform 0.2s ease;
+      overflow: hidden;
+    }
+
+    .orb-glow-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%);
+      animation: orbPulse 3s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes orbPulse {
+      0%, 100% { transform: scale(0.95); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.9; }
+    }
+
+    .orb-reflection {
+      position: absolute;
+      top: 15px;
+      left: 25px;
+      width: 45px;
+      height: 25px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, transparent 80%);
+      transform: rotate(-30deg);
+      pointer-events: none;
+    }
+
+    .orb-inner-answer {
+      color: #f1f5f9;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.35;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px #c084fc;
+      z-index: 2;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .mystic-orb.shaking {
+      animation: orbShake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    @keyframes orbShake {
+      10%, 90% { transform: translate3d(-2px, 0, 0) scale(0.97); }
+      20%, 80% { transform: translate3d(4px, 0, 0) scale(1.02); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0) scale(0.98); }
+      40%, 60% { transform: translate3d(6px, 0, 0) scale(1.02); }
+    }
+
+    .mystic-hint {
+      font-size: 12px;
+      color: #cbd5e1;
+      opacity: 0.8;
+      text-align: center;
+    }
+
+    .ad-slot {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* KARAR VER ALT MENÜ HAPLARI */
+    .sub-nav-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .sub-nav-row::-webkit-scrollbar { display: none; }
+
+    .sub-nav-pill {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .sub-nav-pill.active {
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: 0 3px 12px var(--accent-glow);
+    }
+
+    .sub-tool-view {
       display: none;
       flex-direction: column;
       gap: 14px;
-      animation: fadeIn 0.25s ease forwards;
     }
+    .sub-tool-view.active { display: flex; }
 
-    .tab-section.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
+    /* ÇARK */
     .wheel-container {
       position: relative;
       width: 320px;
       height: 320px;
-      margin: 0 auto;
+      margin: 10px auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -318,13 +456,8 @@
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
       z-index: 5;
-      letter-spacing: 0.5px;
-      transition: transform 0.15s ease;
     }
-
-    .wheel-center-btn:active {
-      transform: scale(0.92);
-    }
+    .wheel-center-btn:active { transform: scale(0.92); }
 
     .presets-row {
       display: flex;
@@ -345,13 +478,8 @@
       white-space: nowrap;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.2s;
     }
-
-    .preset-chip:active {
-      background: var(--accent);
-      color: #fff;
-    }
+    .preset-chip:active { background: var(--accent); color: #fff; }
 
     .card {
       background: var(--card);
@@ -361,7 +489,6 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      overflow: hidden;
     }
 
     .card-title {
@@ -373,11 +500,7 @@
       align-items: center;
     }
 
-    .input-row {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-    }
+    .input-row { display: flex; gap: 8px; width: 100%; }
 
     input[type="text"], input[type="number"], textarea {
       flex: 1 1 0%;
@@ -391,20 +514,7 @@
       font-size: 16px;
       outline: none;
     }
-
-    input[type="number"] {
-      text-align: center;
-      -moz-appearance: textfield;
-    }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input:focus, textarea:focus {
-      border-color: var(--accent);
-    }
+    input:focus, textarea:focus { border-color: var(--accent); }
 
     .btn {
       background: linear-gradient(135deg, #6366f1, #4f46e5);
@@ -420,13 +530,9 @@
       justify-content: center;
       gap: 6px;
       box-shadow: 0 4px 15px var(--accent-glow);
-      transition: all 0.15s ease;
       flex-shrink: 0;
     }
-
-    .btn:active {
-      transform: scale(0.96);
-    }
+    .btn:active { transform: scale(0.96); }
 
     .btn-secondary {
       background: #1e293b;
@@ -454,13 +560,9 @@
       gap: 6px;
     }
 
-    .item-tag-del {
-      cursor: pointer;
-      color: #f43f5e;
-      font-size: 15px;
-      font-weight: bold;
-    }
+    .item-tag-del { cursor: pointer; color: #f43f5e; font-weight: bold; }
 
+    /* ZAR */
     .dice-area {
       display: flex;
       justify-content: center;
@@ -477,13 +579,9 @@
       display: grid;
       grid-template: repeat(3, 1fr) / repeat(3, 1fr);
       padding: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 -4px 6px rgba(0,0,0,0.15);
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     }
-
-    .dice.rolling {
-      animation: diceRollAnim 0.5s linear infinite;
-    }
+    .dice.rolling { animation: diceRollAnim 0.5s linear infinite; }
 
     @keyframes diceRollAnim {
       0% { transform: rotate(0deg) scale(0.9); }
@@ -501,13 +599,8 @@
       visibility: hidden;
     }
 
-    .coin-area {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 35px 0;
-    }
-
+    /* YAZI TURA */
+    .coin-area { display: flex; justify-content: center; align-items: center; padding: 35px 0; }
     .coin {
       width: 135px;
       height: 135px;
@@ -520,14 +613,8 @@
       font-size: 26px;
       font-weight: 900;
       color: #78350f;
-      text-shadow: 0 1px 2px rgba(255,255,255,0.4);
-      box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3), inset 0 2px 4px rgba(255,255,255,0.6);
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
-    .coin.flipping {
-      animation: coinFlipAnim 0.7s ease infinite;
-    }
+    .coin.flipping { animation: coinFlipAnim 0.7s ease infinite; }
 
     @keyframes coinFlipAnim {
       0% { transform: rotateY(0deg) scale(1); }
@@ -541,9 +628,145 @@
       text-align: center;
       color: var(--emerald);
       padding: 20px 0;
-      text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
     }
 
+    /* TABU */
+    .tabu-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 16px;
+      padding: 10px 14px;
+      border: 1px solid var(--card-border);
+    }
+
+    .team-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: all 0.2s;
+    }
+    .team-badge.active {
+      opacity: 1;
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.15);
+      transform: scale(1.05);
+    }
+    .team-name { font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .team-score { font-size: 18px; font-weight: 900; color: #fff; }
+
+    .tabu-timer-box {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--amber);
+      background: #0b1220;
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 12px;
+      min-width: 65px;
+      text-align: center;
+    }
+    .tabu-timer-box.hurry {
+      color: var(--rose);
+      animation: pulse 0.6s infinite alternate;
+    }
+
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.08); } }
+
+    .tabu-card-box {
+      background: linear-gradient(145deg, #162036 0%, #0f172a 100%);
+      border: 2px solid var(--accent);
+      border-radius: 24px;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+
+    .tabu-target-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tabu-target-word {
+      font-size: 30px;
+      font-weight: 900;
+      color: #38bdf8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .tabu-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    }
+
+    .tabu-forbidden-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--rose);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tabu-forbidden-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .tabu-forbidden-item {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      color: #fda4af;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .tabu-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tabu-btn {
+      padding: 14px 8px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 14px;
+      border: none;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .tabu-btn:active { transform: scale(0.95); }
+
+    .tabu-btn-correct { background: linear-gradient(135deg, #10b981, #059669); }
+    .tabu-btn-pass { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .tabu-btn-tabu { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -555,10 +778,7 @@
       z-index: 100;
       padding: 20px;
     }
-
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-box {
       background: var(--card);
@@ -568,25 +788,17 @@
       text-align: center;
       max-width: 360px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 50px var(--accent-glow);
-      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    @keyframes modalPop {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
     }
 
     .modal-subtitle {
       color: var(--text-muted);
       font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 1px;
       margin-bottom: 6px;
     }
 
     .modal-result {
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 900;
       color: #fff;
       margin-bottom: 20px;
@@ -595,23 +807,14 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Sayfa Alt Bilgi Versiyon Alanı */
-    .app-footer-info {
-      text-align: center;
-      font-size: 11px;
-      color: var(--text-muted);
-      opacity: 0.6;
-      padding: 6px 0 14px 0;
-      letter-spacing: 0.5px;
-    }
-
+    /* 3 ANA SEKMELİ BOTTOM NAV */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: calc(64px + env(safe-area-inset-bottom, 0px));
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.94);
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -632,24 +835,24 @@
       border: none;
       color: var(--text-muted);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       gap: 4px;
       cursor: pointer;
-      width: 25%;
+      width: 33.33%;
       transition: color 0.15s;
     }
+    .nav-item .nav-icon { font-size: 20px; }
+    .nav-item.active { color: var(--accent); }
 
-    .nav-item .nav-icon {
-      font-size: 20px;
+    .app-footer-info {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.6;
+      padding: 6px 0 14px 0;
     }
 
-    .nav-item.active {
-      color: var(--accent);
-    }
-
-    #storyCanvas {
-      display: none;
-    }
+    #storyCanvas { display: none; }
   </style>
 </head>
 <body>
@@ -660,148 +863,237 @@
       <div class="brand-logo">✨</div>
       <div class="brand-title-wrap">
         <div class="brand-title">Şansa Bırak</div>
-        <!-- Üst Başlık Yanındaki Rozet -->
-        <span class="version-badge app-version-text">v1.0.0</span>
+        <span class="version-badge app-version-text">v1.2.0</span>
       </div>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" id="pwaInstallBtn" title="Uygulamayı Yükle" style="display:none; color:#10b981; font-weight:bold;">📲</button>
+      <button class="icon-btn" id="pwaInstallBtn" title="Uygulamayı Yükle" style="display:none; color:#10b981;">📲</button>
       <button class="icon-btn" id="shareBtn" title="Paylaş">📤</button>
       <button class="icon-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
     </div>
   </header>
 
   <main>
-    <div class="daily-card">
-      <div class="daily-card-header">
-        <div class="daily-card-badge">✨ Günün Şans Falı</div>
-        <div class="daily-card-refresh" onclick="refreshDailyCard()">🎲 Yenile</div>
-      </div>
-      <div class="daily-quote" id="dailyQuoteText">"Yükleniyor..."</div>
-      <div class="daily-metrics">
-        <div class="metric-box">
-          <div class="metric-label">Uğurlu Sayı</div>
-          <div class="metric-value" id="dailyLuckyNumber">7</div>
+    <!-- ========================================== -->
+    <!-- 1. ANA BÖLÜM: GÜNÜN ŞANSI (FAL + MİSTİK KÜRE) -->
+    <!-- ========================================== -->
+    <section class="main-tab-view active" id="view-fortune">
+      <!-- Fal Kartı -->
+      <div class="daily-card">
+        <div class="daily-card-header">
+          <div class="daily-card-badge">✨ Günün Şans Falı</div>
+          <div class="daily-card-refresh" onclick="refreshDailyCard()">🎲 Yenile</div>
         </div>
-        <div class="metric-box">
-          <div class="metric-label">Şans Oranı</div>
-          <div class="metric-value" id="dailyLuckyRate">%88</div>
+        <div class="daily-quote" id="dailyQuoteText">"Yükleniyor..."</div>
+        <div class="daily-metrics">
+          <div class="metric-box">
+            <div class="metric-label">Uğurlu Sayı</div>
+            <div class="metric-value" id="dailyLuckyNumber">7</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Şans Oranı</div>
+            <div class="metric-value" id="dailyLuckyRate">%88</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Günün Rengi</div>
+            <div class="metric-value" id="dailyLuckyColor">Mavi</div>
+          </div>
         </div>
-        <div class="metric-box">
-          <div class="metric-label">Günün Rengi</div>
-          <div class="metric-value" id="dailyLuckyColor">Mavi</div>
-        </div>
-      </div>
-      <button class="insta-share-btn" onclick="shareToInstagramStory()">
-        📸 Hikayende Paylaş (Story Yap)
-      </button>
-    </div>
-
-    <div class="ad-slot">
-      <span>📢 Sponsorlu Reklam Alanı (Google AdSense / Banner)</span>
-    </div>
-
-    <!-- 1. TAB: ÇARK -->
-    <section class="tab-section active" id="tab-wheel">
-      <div class="presets-row">
-        <div class="preset-chip" onclick="loadPreset('food')">🍔 Ne Yesek?</div>
-        <div class="preset-chip" onclick="loadPreset('activity')">🏃 Ne Yapsak?</div>
-        <div class="preset-chip" onclick="loadPreset('movie')">🎬 Ne İzlesek?</div>
-        <div class="preset-chip" onclick="loadPreset('game')">🎮 Ne Oynasak?</div>
+        <button class="insta-share-btn" onclick="shareToInstagramStory()">
+          📸 Hikayende Paylaş (Story Yap)
+        </button>
       </div>
 
-      <div class="wheel-container">
-        <div class="wheel-pointer"></div>
-        <canvas id="wheelCanvas" width="640" height="640"></canvas>
-        <button class="wheel-center-btn" id="spinBtn">ÇEVİR</button>
+      <!-- Mistik Karar Küresi -->
+      <div class="mystic-card">
+        <div class="mystic-header">
+          <div class="mystic-badge">🔮 Mistik Karar Küresi</div>
+          <div class="mystic-subtitle">Aklından bir soru tut ve küreye dokun</div>
+        </div>
+
+        <div class="orb-container" onclick="askMysticOrb()">
+          <div class="orb-glow-ring"></div>
+          <div class="mystic-orb" id="mysticOrb">
+            <div class="orb-reflection"></div>
+            <div class="orb-inner-answer" id="orbAnswer">Dokun & Öğren</div>
+          </div>
+        </div>
+
+        <div class="mystic-hint">Evren sana ne fısıldıyor? Cevabı içinde ara ✨</div>
       </div>
 
-      <div class="card">
-        <div class="card-title">
-          <span>SEÇENEKLER (<span id="itemCount">0</span>)</span>
-          <span style="font-size:12px; cursor:pointer; color:#f43f5e;" onclick="clearAllItems()">Tümünü Sil</span>
-        </div>
-        <div class="input-row">
-          <input type="text" id="newItemInput" placeholder="Yeni seçenek yaz..." maxlength="25">
-          <button class="btn" onclick="addNewItem()">Ekle</button>
-        </div>
-        <div class="items-tags" id="itemsContainer"></div>
+      <div class="ad-slot">
+        <span>📢 Sponsorlu Reklam Alanı (Google AdSense / Banner)</span>
       </div>
     </section>
 
-    <!-- 2. TAB: ZAR AT -->
-    <section class="tab-section" id="tab-dice">
-      <div class="dice-area">
-        <div class="dice" id="dice1">
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <!-- ========================================== -->
+    <!-- 2. ANA BÖLÜM: KARAR VER (ÇARK, ZAR, PARA..)-->
+    <!-- ========================================== -->
+    <section class="main-tab-view" id="view-decide">
+      <div class="sub-nav-row">
+        <div class="sub-nav-pill active" onclick="switchSubTool('wheel', this)">🎡 Çark</div>
+        <div class="sub-nav-pill" onclick="switchSubTool('dice', this)">🎲 Zar At</div>
+        <div class="sub-nav-pill" onclick="switchSubTool('coin', this)">🪙 Yazı Tura</div>
+        <div class="sub-nav-pill" onclick="switchSubTool('random', this)">🔢 Sayı & Kura</div>
+      </div>
+
+      <!-- Çark -->
+      <div class="sub-tool-view active" id="tool-wheel">
+        <div class="presets-row">
+          <div class="preset-chip" onclick="loadPreset('food')">🍔 Ne Yesek?</div>
+          <div class="preset-chip" onclick="loadPreset('activity')">🏃 Ne Yapsak?</div>
+          <div class="preset-chip" onclick="loadPreset('movie')">🎬 Ne İzlesek?</div>
+          <div class="preset-chip" onclick="loadPreset('game')">🎮 Ne Oynasak?</div>
         </div>
-        <div class="dice" id="dice2" style="display:none;">
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+
+        <div class="wheel-container">
+          <div class="wheel-pointer"></div>
+          <canvas id="wheelCanvas" width="640" height="640"></canvas>
+          <button class="wheel-center-btn" id="spinBtn">ÇEVİR</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>SEÇENEKLER (<span id="itemCount">0</span>)</span>
+            <span style="font-size:12px; cursor:pointer; color:#f43f5e;" onclick="clearAllItems()">Tümünü Sil</span>
+          </div>
+          <div class="input-row">
+            <input type="text" id="newItemInput" placeholder="Yeni seçenek yaz..." maxlength="25">
+            <button class="btn" onclick="addNewItem()">Ekle</button>
+          </div>
+          <div class="items-tags" id="itemsContainer"></div>
         </div>
       </div>
 
-      <div style="display:flex; justify-content:center; gap: 12px; margin-bottom: 10px;">
-        <button class="btn btn-secondary" onclick="toggleTwoDice(false)" id="btnDice1">1 Zar</button>
-        <button class="btn btn-secondary" onclick="toggleTwoDice(true)" id="btnDice2">2 Zar</button>
+      <!-- Zar -->
+      <div class="sub-tool-view" id="tool-dice">
+        <div class="dice-area">
+          <div class="dice" id="dice1">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+          <div class="dice" id="dice2" style="display:none;">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:center; gap: 12px; margin-bottom: 10px;">
+          <button class="btn btn-secondary" onclick="toggleTwoDice(false)" id="btnDice1">1 Zar</button>
+          <button class="btn btn-secondary" onclick="toggleTwoDice(true)" id="btnDice2">2 Zar</button>
+        </div>
+
+        <button class="btn" style="height: 52px; font-size: 17px;" onclick="rollDice()">🎲 ZARLARI AT</button>
       </div>
 
-      <button class="btn" style="height: 52px; font-size: 17px;" onclick="rollDice()">🎲 ZARLARI AT</button>
+      <!-- Yazı Tura -->
+      <div class="sub-tool-view" id="tool-coin">
+        <div class="coin-area">
+          <div class="coin" id="coin">YAZI</div>
+        </div>
+        <button class="btn" style="height: 52px; font-size: 17px;" onclick="flipCoin()">🪙 PARAYI FIRLAT</button>
+      </div>
+
+      <!-- Sayı & Kura -->
+      <div class="sub-tool-view" id="tool-random">
+        <div class="card">
+          <div class="card-title">RASTGELE SAYI ÜRETİCİ</div>
+          <div class="input-row">
+            <input type="number" id="minNum" value="1" placeholder="Min">
+            <input type="number" id="maxNum" value="100" placeholder="Max">
+          </div>
+          <div class="number-display" id="randomNumberResult">--</div>
+          <button class="btn" onclick="generateRandomNumber()">🔢 Sayı Seç</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">İSİM KURASI / KİM SEÇİLECEK?</div>
+          <textarea id="namesList" rows="3" placeholder="İsimleri virgülle veya alt alta yazın (Ahmet, Mehmet...)"></textarea>
+          <button class="btn" onclick="pickRandomName()">👤 Kura Çek</button>
+        </div>
+      </div>
     </section>
 
-    <!-- 3. TAB: YAZI TURA -->
-    <section class="tab-section" id="tab-coin">
-      <div class="coin-area">
-        <div class="coin" id="coin">YAZI</div>
-      </div>
-      <button class="btn" style="height: 52px; font-size: 17px;" onclick="flipCoin()">🪙 PARAYI FIRLAT</button>
-    </section>
-
-    <!-- 4. TAB: RASTGELE SAYI & KURA -->
-    <section class="tab-section" id="tab-random">
-      <div class="card">
-        <div class="card-title">RASTGELE SAYI ÜRETİCİ</div>
-        <div class="input-row">
-          <input type="number" id="minNum" value="1" placeholder="Min">
-          <input type="number" id="maxNum" value="100" placeholder="Max">
+    <!-- ========================================== -->
+    <!-- 3. ANA BÖLÜM: PARTİ & OYUN (TABU MODÜLÜ)   -->
+    <!-- ========================================== -->
+    <section class="main-tab-view" id="view-party">
+      <div class="tabu-header-bar">
+        <div class="team-badge active" id="teamBadgeA" onclick="switchActiveTeam('A')">
+          <span class="team-name" style="color:#60a5fa;">A Takımı</span>
+          <span class="team-score" id="scoreTeamA">0</span>
         </div>
-        <div class="number-display" id="randomNumberResult">--</div>
-        <button class="btn" onclick="generateRandomNumber()">🔢 Sayı Seç</button>
+
+        <div class="tabu-timer-box" id="tabuTimerDisplay">60</div>
+
+        <div class="team-badge" id="teamBadgeB" onclick="switchActiveTeam('B')">
+          <span class="team-name" style="color:#f472b6;">B Takımı</span>
+          <span class="team-score" id="scoreTeamB">0</span>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">İSİM KURASI / KİM SEÇİLECEK?</div>
-        <textarea id="namesList" rows="3" placeholder="İsimleri virgülle veya alt alta yazın (Ahmet, Mehmet, Ayşe...)"></textarea>
-        <button class="btn" onclick="pickRandomName()">👤 Kura Çek</button>
+      <div class="tabu-card-box">
+        <div class="tabu-target-title">Anlatılacak Kelime</div>
+        <div class="tabu-target-word" id="tabuWord">KAHVE</div>
+        
+        <div class="tabu-divider"></div>
+
+        <div class="tabu-forbidden-title">Yasaklı Kelimeler</div>
+        <div class="tabu-forbidden-list" id="tabuForbiddenList">
+          <div class="tabu-forbidden-item">Çay</div>
+          <div class="tabu-forbidden-item">Fincan</div>
+          <div class="tabu-forbidden-item">Kafein</div>
+          <div class="tabu-forbidden-item">Sıcak</div>
+          <div class="tabu-forbidden-item">Starbucks</div>
+        </div>
+      </div>
+
+      <div class="tabu-actions">
+        <button class="tabu-btn tabu-btn-tabu" onclick="handleTabuAction('tabu')">
+          <span>❌</span>
+          <span>TABU (-1)</span>
+        </button>
+        <button class="tabu-btn tabu-btn-pass" onclick="handleTabuAction('pass')">
+          <span>🟡</span>
+          <span id="tabuPassLabel">PAS (3)</span>
+        </button>
+        <button class="tabu-btn tabu-btn-correct" onclick="handleTabuAction('correct')">
+          <span>✅</span>
+          <span>DOĞRU (+1)</span>
+        </button>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary" style="flex:1;" id="tabuStartBtn" onclick="toggleTabuGame()">
+          ▶️ Oyunu Başlat
+        </button>
+        <button class="btn btn-secondary" onclick="resetTabuGame()" title="Sıfırla">
+          🔄 Sıfırla
+        </button>
       </div>
     </section>
 
-    <!-- Sayfa Sonu Versiyon İmzası -->
     <div class="app-footer-info">
-      Şansa Bırak • <span class="app-version-text">v1.0.0</span>
+      Şansa Bırak • <span class="app-version-text">v1.2.0</span>
     </div>
   </main>
 
   <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchTab('wheel', this)">
-      <span class="nav-icon">🎡</span>
-      <span>Çark</span>
+    <button class="nav-item active" onclick="switchMainTab('fortune', this)">
+      <span class="nav-icon">🔮</span>
+      <span>Günün Şansı</span>
     </button>
-    <button class="nav-item" onclick="switchTab('dice', this)">
-      <span class="nav-icon">🎲</span>
-      <span>Zar</span>
+    <button class="nav-item" onclick="switchMainTab('decide', this)">
+      <span class="nav-icon">🎯</span>
+      <span>Karar Ver</span>
     </button>
-    <button class="nav-item" onclick="switchTab('coin', this)">
-      <span class="nav-icon">🪙</span>
-      <span>Yazı Tura</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('random', this)">
-      <span class="nav-icon">🔢</span>
-      <span>Sayı & Kura</span>
+    <button class="nav-item" onclick="switchMainTab('party', this)">
+      <span class="nav-icon">🤫</span>
+      <span>Tabu & Oyun</span>
     </button>
   </nav>
 
@@ -818,29 +1110,42 @@
 
   <script>
     // ==========================================
-    // ⚙️ UYGULAMA VERSİYONU (Burayı Güncelleyebilirsin)
+    // ⚙️ UYGULAMA VERSİYONU
     // ==========================================
-    const APP_VERSION = 'v1.0.1';
+    const APP_VERSION = 'v1.2.0';
+    document.querySelectorAll('.app-version-text').forEach(el => el.textContent = APP_VERSION);
 
-    // Versiyonu arayüzdeki ilgili tüm alanlara basar
-    document.querySelectorAll('.app-version-text').forEach(el => {
-      el.textContent = APP_VERSION;
-    });
+    // ==========================================
+    // 🧭 TAB GEÇİŞLERİ
+    // ==========================================
+    function switchMainTab(tabKey, el) {
+      document.querySelectorAll('.main-tab-view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('view-' + tabKey).classList.add('active');
+      el.classList.add('active');
+      vibrate(10);
+      if (tabKey === 'decide') drawWheel();
+    }
 
+    function switchSubTool(toolKey, el) {
+      document.querySelectorAll('.sub-tool-view').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.sub-nav-pill').forEach(p => p.classList.remove('active'));
+      document.getElementById('tool-' + toolKey).classList.add('active');
+      el.classList.add('active');
+      vibrate(10);
+      if (toolKey === 'wheel') drawWheel();
+    }
+
+    // ==========================================
+    // 🔮 GÜNÜN ŞANS FALI MANTIĞI
+    // ==========================================
     let fortuneList = [
       "Bugün o mesajı sen atma, arkana yaslan ve bekle. Top onların sahasında.",
       "O diyete bugün değil, yarın başla. Kendine bir tatlı ödülü ver!",
       "Aklındaki o çılgın fikri hayata geçirmenin tam sırası. Olmazsa 'şansa bıraktım' dersin.",
       "Bugün mantığını bir kenara bırak; kalbinin ilk dediği seçenek doğru çıkacak.",
       "Günün kuralı: 'Hemen geliyorum' diyen arkadaşına en az 40 dakika pay bırak.",
-      "Bugün karşına çıkacak ilk teklifi kabul etme, ikincisi çok daha lezzetli olacak.",
-      "Gereksiz harcamalardan uzak dur... Tabii kahve ve tatlı hariç!",
-      "Bugün şansın %90'ın üzerinde. Kararsız kaldığın ne varsa gözünü kapat ve seç.",
-      "Seni aramasını beklediğin kişi bugün aramayabilir ama daha güzel bir kapı açılacak.",
-      "Bugün kimseyle tartışmaya girme; 'he he' de ve günün tadını çıkar.",
-      "Kendini şımartma günü. Fazladan bir bölüm dizi izlemeyi hak ettin.",
-      "Bugün tesadüflere dikkat et; üçüncü kez duyduğun o şarkı sana bir şey fısıldıyor.",
-      "Kararsızlık zaman kaybıdır. Çarkı çevir, arkana yaslan!"
+      "Gereksiz harcamalardan uzak dur... Tabii kahve ve tatlı hariç!"
     ];
 
     async function loadFortuneData() {
@@ -848,13 +1153,9 @@
         const response = await fetch('./sozler.json');
         if (response.ok) {
           const data = await response.json();
-          if (Array.isArray(data) && data.length > 0) {
-            fortuneList = data;
-          }
+          if (Array.isArray(data) && data.length > 0) fortuneList = data;
         }
-      } catch (err) {
-        console.warn('sozler.json okunamadı, yerleşik sözler kullanılacak.', err);
-      }
+      } catch (err) {}
     }
 
     const colorsList = ["Gece Mavisi", "Zümrüt Yeşili", "Alev Kırmızısı", "Güneş Sarısı", "Neon Pembe", "Mor"];
@@ -864,7 +1165,6 @@
       await loadFortuneData();
       const todayKey = new Date().toISOString().slice(0, 10);
       const saved = localStorage.getItem('sansa_birak_daily');
-      
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -879,19 +1179,13 @@
     }
 
     function refreshDailyCard() {
-      const quote = fortuneList[Math.floor(Math.random() * fortuneList.length)];
-      const num = Math.floor(Math.random() * 99) + 1;
-      const rate = Math.floor(Math.random() * 36) + 65;
-      const color = colorsList[Math.floor(Math.random() * colorsList.length)];
-      
       currentFortune = {
         date: new Date().toISOString().slice(0, 10),
-        quote,
-        num,
-        rate,
-        color
+        quote: fortuneList[Math.floor(Math.random() * fortuneList.length)],
+        num: Math.floor(Math.random() * 99) + 1,
+        rate: Math.floor(Math.random() * 36) + 65,
+        color: colorsList[Math.floor(Math.random() * colorsList.length)]
       };
-
       localStorage.setItem('sansa_birak_daily', JSON.stringify(currentFortune));
       renderDailyCard();
     }
@@ -903,6 +1197,65 @@
       document.getElementById('dailyLuckyColor').textContent = currentFortune.color;
     }
 
+    // ==========================================
+    // 🔮 MİSTİK KARAR KÜRESİ MANTIĞI
+    // ==========================================
+    const mysticAnswers = [
+      "Kesinlikle evet!",
+      "Yıldızlar seninle ✨",
+      "Hiç şüphen olmasın.",
+      "Zamanı tam şimdi!",
+      "İşaretler çok olumlu.",
+      "Şu an sisli, sonra sor 🌫️",
+      "Cevap kalbinde saklı.",
+      "Akışa bırak ve bekle.",
+      "Henüz netleşmedi...",
+      "Bugün pek uygun değil.",
+      "Mantığınla tekrar düşün.",
+      "Kader başka plan yapıyor.",
+      "İç sesine kulak ver.",
+      "Risk almaya değer!",
+      "Biraz sabırlı ol."
+    ];
+
+    let isOrbThinking = false;
+
+    function askMysticOrb() {
+      if (isOrbThinking) return;
+      isOrbThinking = true;
+
+      const orb = document.getElementById('mysticOrb');
+      const text = document.getElementById('orbAnswer');
+
+      vibrate([30, 40, 30]);
+      playMysticSound();
+
+      orb.classList.add('shaking');
+      text.style.opacity = '0';
+      text.style.transform = 'scale(0.8)';
+
+      setTimeout(() => {
+        const randomAnswer = mysticAnswers[Math.floor(Math.random() * mysticAnswers.length)];
+        text.textContent = randomAnswer;
+        text.style.opacity = '1';
+        text.style.transform = 'scale(1)';
+        orb.classList.remove('shaking');
+        isOrbThinking = false;
+        vibrate(50);
+      }, 650);
+    }
+
+    function playMysticSound() {
+      if (!soundEnabled) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+        setTimeout(() => playTone(freq, 'sine', 0.2), i * 70);
+      });
+    }
+
+    // ==========================================
+    // 📸 INSTAGRAM STORY OLUŞTURUCU
+    // ==========================================
     async function shareToInstagramStory() {
       vibrate(30);
       const canvas = document.getElementById('storyCanvas');
@@ -930,16 +1283,11 @@
       ctx.font = '32px -apple-system, sans-serif';
       ctx.fillText('GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
 
-      const cardX = 90;
-      const cardY = 520;
-      const cardW = 900;
-      const cardH = 920;
-
+      const cardX = 90, cardY = 520, cardW = 900, cardH = 920;
       ctx.save();
       ctx.fillStyle = 'rgba(19, 27, 46, 0.85)';
       ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
       ctx.lineWidth = 4;
-      
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
         ctx.roundRect(cardX, cardY, cardW, cardH, 40);
@@ -981,20 +1329,11 @@
 
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'sansa-birak-gunun-fali.png', { type: 'image/png' });
-        
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
-            await navigator.share({
-              files: [file],
-              title: 'Günün Şans Falı | Şansa Bırak',
-              text: 'Günün falı sende ne çıktı? Bakalım çark bugün kimden yana!'
-            });
-          } catch (e) {
-            fallbackDownload(blob);
-          }
-        } else {
-          fallbackDownload(blob);
-        }
+            await navigator.share({ files: [file], title: 'Günün Şans Falı' });
+          } catch (e) { fallbackDownload(blob); }
+        } else { fallbackDownload(blob); }
       }, 'image/png');
     }
 
@@ -1012,27 +1351,162 @@
       let line = '';
       for (let n = 0; n < words.length; n++) {
         const testLine = line + words[n] + ' ';
-        const metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
+        if (ctx.measureText(testLine).width > maxWidth && n > 0) {
           ctx.fillText(line, x, y);
           line = words[n] + ' ';
           y += lineHeight;
-        } else {
-          line = testLine;
-        }
+        } else { line = testLine; }
       }
       ctx.fillText(line, x, y);
     }
 
     function fallbackDownload(blob) {
-      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url;
+      a.href = URL.createObjectURL(blob);
       a.download = 'sansa-birak-story.png';
       a.click();
-      alert("Story görselin galeriye kaydedildi! Instagram Hikayene ekleyebilirsin ✨");
+      alert("Story görselin indirildi! Instagram Hikayene ekleyebilirsin ✨");
     }
 
+    // ==========================================
+    // 🤫 TABU OYUNU MANTIĞI
+    // ==========================================
+    let tabuCards = [
+      { word: "KAHVE", forbidden: ["Çay", "Fincan", "Kafein", "Sıcak", "Starbucks"] },
+      { word: "GÜNEŞ", forbidden: ["Yaz", "Sıcak", "Deniz", "Sarı", "Gözlük"] },
+      { word: "PİJAMA", forbidden: ["Uyku", "Yatak", "Giymek", "Gece", "Takım"] },
+      { word: "TELEFON", forbidden: ["Aramak", "Ekran", "Mesaj", "Akıllı", "Şarj"] },
+      { word: "FUTBOL", forbidden: ["Top", "Gol", "Maç", "Saha", "Hakem"] },
+      { word: "SİNEMA", forbidden: ["Film", "Mısır", "Bilet", "Salon", "Karanlık"] },
+      { word: "AŞK", forbidden: ["Kalp", "Sevgi", "Sevgili", "Duygu", "Romantik"] },
+      { word: "UÇAK", forbidden: ["Havalimanı", "Pilot", "Bilet", "Uçmak", "Kanat"] },
+      { word: "DİYET", forbidden: ["Kilo", "Yemek", "Salata", "Pazartesi", "Zayıflamak"] },
+      { word: "KİTAP", forbidden: ["Okumak", "Sayfa", "Yazar", "Roman", "Kütüphane"] }
+    ];
+
+    async function loadTabuData() {
+      try {
+        const res = await fetch('./tabu.json');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) tabuCards = data;
+        }
+      } catch (e) {}
+    }
+
+    let activeTeam = 'A';
+    let teamScores = { A: 0, B: 0 };
+    let tabuTime = 60;
+    let tabuInterval = null;
+    let isTabuRunning = false;
+    let passesLeft = 3;
+    let currentCardIndex = 0;
+
+    function renderTabuCard() {
+      const card = tabuCards[currentCardIndex % tabuCards.length];
+      document.getElementById('tabuWord').textContent = card.word;
+      const listEl = document.getElementById('tabuForbiddenList');
+      listEl.innerHTML = '';
+      card.forbidden.forEach(word => {
+        const item = document.createElement('div');
+        item.className = 'tabu-forbidden-item';
+        item.textContent = word;
+        listEl.appendChild(item);
+      });
+    }
+
+    function nextTabuCard() {
+      currentCardIndex = Math.floor(Math.random() * tabuCards.length);
+      renderTabuCard();
+    }
+
+    function switchActiveTeam(team) {
+      activeTeam = team;
+      document.getElementById('teamBadgeA').classList.toggle('active', team === 'A');
+      document.getElementById('teamBadgeB').classList.toggle('active', team === 'B');
+    }
+
+    function toggleTabuGame() {
+      if (isTabuRunning) {
+        clearInterval(tabuInterval);
+        isTabuRunning = false;
+        document.getElementById('tabuStartBtn').textContent = '▶️ Devam Et';
+      } else {
+        isTabuRunning = true;
+        document.getElementById('tabuStartBtn').textContent = '⏸️ Duraklat';
+        tabuInterval = setInterval(() => {
+          tabuTime--;
+          const timerEl = document.getElementById('tabuTimerDisplay');
+          timerEl.textContent = tabuTime;
+          if (tabuTime <= 10) {
+            timerEl.classList.add('hurry');
+            playTone(400, 'triangle', 0.04);
+          }
+          if (tabuTime <= 0) {
+            clearInterval(tabuInterval);
+            isTabuRunning = false;
+            playTone(150, 'sawtooth', 0.5);
+            alert(`Süre bitti! Sıra diğer takımda.`);
+            tabuTime = 60;
+            passesLeft = 3;
+            document.getElementById('tabuPassLabel').textContent = `PAS (${passesLeft})`;
+            timerEl.textContent = tabuTime;
+            timerEl.classList.remove('hurry');
+            document.getElementById('tabuStartBtn').textContent = '▶️ Oyunu Başlat';
+            switchActiveTeam(activeTeam === 'A' ? 'B' : 'A');
+          }
+        }, 1000);
+      }
+    }
+
+    function handleTabuAction(action) {
+      if (!isTabuRunning) {
+        alert("Lütfen önce oyunu başlatın!");
+        return;
+      }
+
+      if (action === 'correct') {
+        teamScores[activeTeam]++;
+        playTone(700, 'sine', 0.08);
+        vibrate(30);
+      } else if (action === 'tabu') {
+        teamScores[activeTeam] = Math.max(0, teamScores[activeTeam] - 1);
+        playTone(150, 'sawtooth', 0.2);
+        vibrate([50, 50, 50]);
+      } else if (action === 'pass') {
+        if (passesLeft <= 0) {
+          alert("Pas hakkınız kalmadı!");
+          return;
+        }
+        passesLeft--;
+        document.getElementById('tabuPassLabel').textContent = `PAS (${passesLeft})`;
+        playTone(450, 'sine', 0.05);
+      }
+
+      document.getElementById('scoreTeamA').textContent = teamScores.A;
+      document.getElementById('scoreTeamB').textContent = teamScores.B;
+      nextTabuCard();
+    }
+
+    function resetTabuGame() {
+      clearInterval(tabuInterval);
+      isTabuRunning = false;
+      tabuTime = 60;
+      passesLeft = 3;
+      teamScores = { A: 0, B: 0 };
+      document.getElementById('scoreTeamA').textContent = '0';
+      document.getElementById('scoreTeamB').textContent = '0';
+      document.getElementById('tabuTimerDisplay').textContent = '60';
+      document.getElementById('tabuTimerDisplay').classList.remove('hurry');
+      document.getElementById('tabuPassLabel').textContent = 'PAS (3)';
+      document.getElementById('tabuStartBtn').textContent = '▶️ Oyunu Başlat';
+      switchActiveTeam('A');
+      nextTabuCard();
+    }
+
+    // ==========================================
+    // 🔊 SES & TİTREŞİM MOTORU
+    // ==========================================
     let soundEnabled = true;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -1061,7 +1535,10 @@
     }
 
     function vibrate(ms = 20) {
-      if (navigator.vibrate) navigator.vibrate(ms);
+      if (navigator.vibrate) {
+        if (Array.isArray(ms)) navigator.vibrate(ms);
+        else navigator.vibrate(ms);
+      }
     }
 
     document.getElementById('soundToggle').onclick = () => {
@@ -1069,25 +1546,16 @@
       document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
     };
 
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
-      el.classList.add('active');
-      vibrate(10);
-    }
-
+    // ==========================================
+    // 🎡 ÇARK MANTIĞI
+    // ==========================================
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const spinBtn = document.getElementById('spinBtn');
 
     const defaultItems = ['Pizza', 'Döner', 'Hamburger', 'Kebap', 'Evde Ye', 'Makarna'];
     let items = JSON.parse(localStorage.getItem('sansa_birak_items')) || defaultItems;
-
-    const colors = [
-      '#6366f1', '#ec4899', '#f59e0b', '#10b981', 
-      '#06b6d4', '#8b5cf6', '#ef4444', '#14b8a6'
-    ];
+    const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#8b5cf6', '#ef4444', '#14b8a6'];
 
     let currentAngle = 0;
     let isSpinning = false;
@@ -1097,12 +1565,10 @@
       if (numSlices === 0) return;
       const arc = (2 * Math.PI) / numSlices;
       const radius = canvas.width / 2;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < numSlices; i++) {
         const sliceAngle = currentAngle + i * arc;
-
         ctx.beginPath();
         ctx.fillStyle = colors[i % colors.length];
         ctx.moveTo(radius, radius);
@@ -1223,23 +1689,20 @@
           showResult(items[winnerIndex]);
         }
       }
-
       requestAnimationFrame(animate);
     };
 
+    // ==========================================
+    // 🎲 ZAR & 🪙 YAZI TURA & SAYI
+    // ==========================================
     let twoDiceMode = false;
     const dicePatterns = {
-      1: [4],
-      2: [0, 8],
-      3: [0, 4, 8],
-      4: [0, 2, 6, 8],
-      5: [0, 2, 4, 6, 8],
-      6: [0, 2, 3, 5, 6, 8]
+      1: [4], 2: [0, 8], 3: [0, 4, 8],
+      4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8]
     };
 
     function setDiceDots(diceEl, value) {
-      const dots = diceEl.querySelectorAll('.dot');
-      dots.forEach((d, i) => {
+      diceEl.querySelectorAll('.dot').forEach((d, i) => {
         d.style.visibility = dicePatterns[value].includes(i) ? 'visible' : 'hidden';
       });
     }
@@ -1264,7 +1727,6 @@
         if (twoDiceMode) d2.classList.remove('rolling');
         const v1 = Math.floor(Math.random() * 6) + 1;
         setDiceDots(d1, v1);
-        
         if (twoDiceMode) {
           const v2 = Math.floor(Math.random() * 6) + 1;
           setDiceDots(d2, v2);
@@ -1298,19 +1760,18 @@
       }
       vibrate(20);
       playTone(500, 'triangle', 0.05);
-      const res = Math.floor(Math.random() * (max - min + 1)) + min;
-      document.getElementById('randomNumberResult').textContent = res;
+      document.getElementById('randomNumberResult').textContent = Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     function pickRandomName() {
       const raw = document.getElementById('namesList').value;
-      const list = raw.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
+      const list = raw.split(/[
+,]+/).map(s => s.trim()).filter(s => s.length > 0);
       if (list.length < 2) {
         alert("Lütfen en az 2 isim girin!");
         return;
       }
-      const chosen = list[Math.floor(Math.random() * list.length)];
-      showResult(`Seçilen: ${chosen}`);
+      showResult(`Seçilen: ${list[Math.floor(Math.random() * list.length)]}`);
     }
 
     function showResult(text) {
@@ -1339,25 +1800,25 @@
       }
     };
 
+    // ==========================================
+    // 🚀 BAŞLANGIÇ
+    // ==========================================
     initDailyFortune();
+    loadTabuData().then(nextTabuCard);
     renderTags();
     setDiceDots(document.getElementById('dice1'), 1);
     setDiceDots(document.getElementById('dice2'), 6);
-  
+
+    // PWA Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', async () => {
         try {
           const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
           reg.update();
-
           document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-              reg.update();
-            }
+            if (document.visibilityState === 'visible') reg.update();
           });
-        } catch (err) {
-          console.error('Service Worker kayıt hatası:', err);
-        }
+        } catch (err) {}
       });
 
       let refreshing = false;
@@ -1371,13 +1832,10 @@
 
     let deferredPrompt = null;
     const pwaInstallBtn = document.getElementById('pwaInstallBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (pwaInstallBtn) {
-        pwaInstallBtn.style.display = 'flex';
-      }
+      if (pwaInstallBtn) pwaInstallBtn.style.display = 'flex';
     });
 
     if (pwaInstallBtn) {
@@ -1385,9 +1843,7 @@
         if (!deferredPrompt) return;
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          pwaInstallBtn.style.display = 'none';
-        }
+        if (outcome === 'accepted') pwaInstallBtn.style.display = 'none';
         deferredPrompt = null;
       });
     }

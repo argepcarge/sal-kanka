@@ -1294,12 +1294,44 @@
     setDiceDots(document.getElementById('dice1'), 1);
     setDiceDots(document.getElementById('dice2'), 6);
   
-    // --- PWA SERVICE WORKER & YÜKLEME YÖNETİMİ ---
+    // --- PWA SERVICE WORKER & OTOMATİK GÜNCELLEME YÖNETİMİ ---
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then((reg) => console.log('Service Worker kayıt başarılı: ', reg.scope))
-          .catch((err) => console.log('Service Worker kayıt hatası: ', err));
+      window.addEventListener('load', async () => {
+        try {
+          // updateViaCache: 'none' ile tarayıcı sw.js dosyasını asla önbellekten almaz, sunucudan kontrol eder
+          const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+          
+          // Sayfa her açıldığında güncelleme kontrolü yap
+          reg.update();
+
+          // Sekmeye geri dönüldüğünde (arka plandan öne gelindiğinde) güncelleme kontrolü yap
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+              reg.update();
+            }
+          });
+
+          // Yeni bir servis çalışanı bulunduğunda
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('Yeni sürüm tespit edildi, sayfa güncelleniyor...');
+              }
+            });
+          });
+        } catch (err) {
+          console.error('Service Worker kayıt hatası:', err);
+        }
+      });
+
+      // Yeni Service Worker kontrolü devraldığında sayfayı yenileyip en güncel hali göster
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
       });
     }
 

@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#090d16">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Günün şans falı, mistik küre, karar çarkı ve eğlenceli parti oyunları!">
+  <meta name="description" content="Günün şansı, bilgelik sözleri, mistik küre, karar çarkı ve zihin okuyucu oyunları!">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="ŞansaBırak">
@@ -25,6 +25,7 @@
       --emerald: #10b981;
       --rose: #f43f5e;
       --purple: #a855f7;
+      --cyan: #06b6d4;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -62,7 +63,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       position: sticky;
@@ -164,15 +165,55 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* GÜNÜN ŞANS KARTI */
+    /* GÜNÜN KARTI (FAL / BİLGELİK GEÇİŞLİ) */
     .daily-card {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15));
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(236, 72, 153, 0.14));
       border: 1px solid rgba(236, 72, 153, 0.35);
       border-radius: 22px;
       padding: 18px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.3s;
+    }
+
+    .daily-card.wisdom-theme {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(99, 102, 241, 0.15));
+      border-color: rgba(6, 182, 212, 0.35);
+    }
+
+    /* Mod Seçici Hap Butonlar */
+    .daily-mode-switch {
+      display: flex;
+      background: rgba(11, 18, 32, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 3px;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .mode-tab-btn {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 11px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .mode-tab-btn.active {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
     }
 
     .daily-card-header {
@@ -196,10 +237,17 @@
       letter-spacing: 0.5px;
     }
 
+    .daily-card-badge.wisdom-badge {
+      background: linear-gradient(90deg, #06b6d4, #6366f1);
+    }
+
     .daily-card-refresh {
       font-size: 12px;
       color: var(--text-muted);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .daily-quote {
@@ -207,13 +255,23 @@
       font-weight: 600;
       line-height: 1.5;
       color: #f8fafc;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       min-height: 48px;
+    }
+
+    .daily-author-sign {
+      display: none;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+      font-style: italic;
+      margin-bottom: 14px;
     }
 
     .daily-metrics {
       display: grid;
-      grid-template: 1fr / repeat(3, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       background: rgba(15, 23, 42, 0.5);
       border-radius: 14px;
@@ -252,7 +310,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -284,7 +342,7 @@
       position: relative;
       width: 180px;
       height: 180px;
-      margin: 8px auto;
+      margin: 6px auto;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -305,7 +363,7 @@
       align-items: center;
       justify-content: center;
       padding: 22px;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, filter 0.2s ease;
       overflow: hidden;
     }
 
@@ -346,6 +404,7 @@
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
+    /* Küre Sallanma Animasyonu (Cevap Çıkarken) */
     .mystic-orb.shaking {
       animation: orbShake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     }
@@ -357,11 +416,32 @@
       40%, 60% { transform: translate3d(6px, 0, 0) scale(1.02); }
     }
 
+    /* Küre Ret Sallantısı (Cooldown Sırasında) */
+    .mystic-orb.wobble-reject {
+      animation: orbWobble 0.4s ease-in-out both;
+    }
+
+    @keyframes orbWobble {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-8px) rotate(-4deg); }
+      40% { transform: translateX(8px) rotate(4deg); }
+      60% { transform: translateX(-5px) rotate(-2deg); }
+      80% { transform: translateX(5px) rotate(2deg); }
+      100% { transform: translateX(0); }
+    }
+
     .mystic-hint {
       font-size: 12px;
       color: #cbd5e1;
-      opacity: 0.8;
+      opacity: 0.85;
       text-align: center;
+      min-height: 18px;
+      transition: color 0.2s;
+    }
+
+    .mystic-hint.cooldown-text {
+      color: #f472b6;
+      font-weight: 700;
     }
 
     .ad-slot {
@@ -375,7 +455,7 @@
       text-transform: uppercase;
     }
 
-    /* KARAR VER ALT MENÜ HAPLARI */
+    /* ALT MENÜ HAPLARI */
     .sub-nav-row {
       display: flex;
       gap: 8px;
@@ -635,7 +715,7 @@
       padding: 20px 0;
     }
 
-    /* TABU */
+    /* ANLAT BAKALIM (TABU) */
     .tabu-header-bar {
       display: flex;
       justify-content: space-between;
@@ -771,11 +851,101 @@
     .tabu-btn-pass { background: linear-gradient(135deg, #f59e0b, #d97706); }
     .tabu-btn-tabu { background: linear-gradient(135deg, #f43f5e, #e11d48); }
 
+    /* MİSTİK ZİHİN OKUYUCU (1-63 OYUNU) */
+    .mind-card {
+      background: linear-gradient(145deg, #131b2e 0%, #1e1b4b 100%);
+      border: 2px solid var(--purple);
+      border-radius: 24px;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    .mind-step-badge {
+      font-size: 11px;
+      font-weight: 800;
+      color: #c084fc;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mind-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .mind-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .mind-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      width: 100%;
+      background: rgba(11, 18, 32, 0.6);
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      max-height: 230px;
+      overflow-y: auto;
+    }
+
+    .mind-grid-num {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 7px 4px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 14px;
+      color: #38bdf8;
+    }
+
+    .mind-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .mind-btn-yes {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mind-btn-no {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #fff;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+    }
+
     /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       display: none;
       align-items: center;
@@ -868,7 +1038,7 @@
       <div class="brand-logo">✨</div>
       <div class="brand-title-wrap">
         <div class="brand-title">Şansa Bırak</div>
-        <span class="version-badge app-version-text">v1.2.1</span>
+        <span class="version-badge app-version-text">v1.3.0</span>
       </div>
     </div>
     <div class="header-actions">
@@ -879,15 +1049,34 @@
   </header>
 
   <main>
+    <!-- ========================================== -->
     <!-- 1. ANA BÖLÜM: GÜNÜN ŞANSI (FAL + MİSTİK KÜRE) -->
+    <!-- ========================================== -->
     <section class="main-tab-view active" id="view-fortune">
-      <div class="daily-card">
-        <div class="daily-card-header">
-          <div class="daily-card-badge">✨ Günün Şans Falı</div>
-          <div class="daily-card-refresh" onclick="refreshDailyCard()">🎲 Yenile</div>
+      <!-- Günün Kartı (Fal / Bilgelik Geçişli) -->
+      <div class="daily-card" id="dailyCardElement">
+        <!-- Mod Değiştirici Butonlar -->
+        <div class="daily-mode-switch">
+          <button class="mode-tab-btn active" id="btnModeFal" onclick="switchDailyMode('fal')">
+            <span>✨</span> Günün Falı
+          </button>
+          <button class="mode-tab-btn" id="btnModeWisdom" onclick="switchDailyMode('wisdom')">
+            <span>🏛️</span> Günün Bilgeliği
+          </button>
         </div>
+
+        <div class="daily-card-header">
+          <div class="daily-card-badge" id="dailyCardBadge">✨ Günün Falı</div>
+          <div class="daily-card-refresh" onclick="refreshDailyCard()">
+            <span>🎲</span> Yenile
+          </div>
+        </div>
+
         <div class="daily-quote" id="dailyQuoteText">"Yükleniyor..."</div>
-        <div class="daily-metrics">
+        <div class="daily-author-sign" id="dailyAuthorSign"></div>
+
+        <!-- Fal Modunda Görünen Metrikler -->
+        <div class="daily-metrics" id="dailyMetricsGroup">
           <div class="metric-box">
             <div class="metric-label">Uğurlu Sayı</div>
             <div class="metric-value" id="dailyLuckyNumber">7</div>
@@ -901,6 +1090,7 @@
             <div class="metric-value" id="dailyLuckyColor">Mavi</div>
           </div>
         </div>
+
         <button class="insta-share-btn" onclick="shareToInstagramStory()">
           📸 Hikayende Paylaş (Story Yap)
         </button>
@@ -921,7 +1111,7 @@
           </div>
         </div>
 
-        <div class="mystic-hint">Evren sana ne fısıldıyor? Cevabı içinde ara ✨</div>
+        <div class="mystic-hint" id="mysticHintText">Evren sana ne fısıldıyor? Cevabı içinde ara ✨</div>
       </div>
 
       <div class="ad-slot">
@@ -929,7 +1119,9 @@
       </div>
     </section>
 
+    <!-- ========================================== -->
     <!-- 2. ANA BÖLÜM: KARAR VER (ÇARK, ZAR, PARA..) -->
+    <!-- ========================================== -->
     <section class="main-tab-view" id="view-decide">
       <div class="sub-nav-row">
         <div class="sub-nav-pill active" onclick="switchSubTool('wheel', this)">🎡 Çark</div>
@@ -1017,65 +1209,130 @@
       </div>
     </section>
 
-    <!-- 3. ANA BÖLÜM: PARTİ & OYUN (TABU MODÜLÜ) -->
+    <!-- ========================================== -->
+    <!-- 3. ANA BÖLÜM: PARTİ & OYUN                -->
+    <!-- ========================================== -->
     <section class="main-tab-view" id="view-party">
-      <div class="tabu-header-bar">
-        <div class="team-badge active" id="teamBadgeA" onclick="switchActiveTeam('A')">
-          <span class="team-name" style="color:#60a5fa;">A Takımı</span>
-          <span class="team-score" id="scoreTeamA">0</span>
+      <div class="sub-nav-row">
+        <div class="sub-nav-pill active" onclick="switchPartyGame('tabu', this)">🤫 Anlat Bakalım</div>
+        <div class="sub-nav-pill" onclick="switchPartyGame('mind', this)">🧠 Zihin Okuyucu</div>
+      </div>
+
+      <!-- ANLAT BAKALIM OYUNU -->
+      <div class="sub-tool-view active" id="game-tabu">
+        <div class="tabu-header-bar">
+          <div class="team-badge active" id="teamBadgeA" onclick="switchActiveTeam('A')">
+            <span class="team-name" style="color:#60a5fa;">A Takımı</span>
+            <span class="team-score" id="scoreTeamA">0</span>
+          </div>
+
+          <div class="tabu-timer-box" id="tabuTimerDisplay">60</div>
+
+          <div class="team-badge" id="teamBadgeB" onclick="switchActiveTeam('B')">
+            <span class="team-name" style="color:#f472b6;">B Takımı</span>
+            <span class="team-score" id="scoreTeamB">0</span>
+          </div>
         </div>
 
-        <div class="tabu-timer-box" id="tabuTimerDisplay">60</div>
+        <div class="tabu-card-box">
+          <div class="tabu-target-title">Anlatılacak Kelime</div>
+          <div class="tabu-target-word" id="tabuWord">KAHVE</div>
+          
+          <div class="tabu-divider"></div>
 
-        <div class="team-badge" id="teamBadgeB" onclick="switchActiveTeam('B')">
-          <span class="team-name" style="color:#f472b6;">B Takımı</span>
-          <span class="team-score" id="scoreTeamB">0</span>
+          <div class="tabu-forbidden-title">Yasaklı Kelimeler</div>
+          <div class="tabu-forbidden-list" id="tabuForbiddenList">
+            <div class="tabu-forbidden-item">Çay</div>
+            <div class="tabu-forbidden-item">Fincan</div>
+            <div class="tabu-forbidden-item">Kafein</div>
+            <div class="tabu-forbidden-item">Sıcak</div>
+            <div class="tabu-forbidden-item">Starbucks</div>
+          </div>
+        </div>
+
+        <div class="tabu-actions">
+          <button class="tabu-btn tabu-btn-tabu" onclick="handleTabuAction('tabu')">
+            <span>❌</span>
+            <span>CEZA (-1)</span>
+          </button>
+          <button class="tabu-btn tabu-btn-pass" onclick="handleTabuAction('pass')">
+            <span>🟡</span>
+            <span id="tabuPassLabel">PAS (3)</span>
+          </button>
+          <button class="tabu-btn tabu-btn-correct" onclick="handleTabuAction('correct')">
+            <span>✅</span>
+            <span>DOĞRU (+1)</span>
+          </button>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn btn-secondary" style="flex:1;" id="tabuStartBtn" onclick="toggleTabuGame()">
+            ▶️ Oyunu Başlat
+          </button>
+          <button class="btn btn-secondary" onclick="resetTabuGame()" title="Sıfırla">
+            🔄 Sıfırla
+          </button>
         </div>
       </div>
 
-      <div class="tabu-card-box">
-        <div class="tabu-target-title">Anlatılacak Kelime</div>
-        <div class="tabu-target-word" id="tabuWord">KAHVE</div>
-        
-        <div class="tabu-divider"></div>
-
-        <div class="tabu-forbidden-title">Yasaklı Kelimeler</div>
-        <div class="tabu-forbidden-list" id="tabuForbiddenList">
-          <div class="tabu-forbidden-item">Çay</div>
-          <div class="tabu-forbidden-item">Fincan</div>
-          <div class="tabu-forbidden-item">Kafein</div>
-          <div class="tabu-forbidden-item">Sıcak</div>
-          <div class="tabu-forbidden-item">Starbucks</div>
+      <!-- MİSTİK ZİHİN OKUYUCU (1-63 SİHİRBAZLIK OYUNU) -->
+      <div class="sub-tool-view" id="game-mind">
+        <!-- Adım 0: Giriş Ekranı -->
+        <div class="mind-card" id="mindStepIntro">
+          <div class="mind-step-badge">🔮 Sihirbazlık Şovu</div>
+          <div class="mind-title">Mistik Zihin Okuyucu</div>
+          <div class="mind-desc">
+            Aklından <strong>1 ile 63 arasında</strong> herhangi bir sayı tut.<br><br>
+            Sayıyı <u>asla ekrana yazma</u> ve kimseye söyleme. Sadece aklında canlandır!
+          </div>
+          <button class="btn" style="width:100%; height:50px; font-size:16px;" onclick="startMindGame()">
+            Sayıyı Tuttum, Başla! 🔮
+          </button>
         </div>
-      </div>
 
-      <div class="tabu-actions">
-        <button class="tabu-btn tabu-btn-tabu" onclick="handleTabuAction('tabu')">
-          <span>❌</span>
-          <span>TABU (-1)</span>
-        </button>
-        <button class="tabu-btn tabu-btn-pass" onclick="handleTabuAction('pass')">
-          <span>🟡</span>
-          <span id="tabuPassLabel">PAS (3)</span>
-        </button>
-        <button class="tabu-btn tabu-btn-correct" onclick="handleTabuAction('correct')">
-          <span>✅</span>
-          <span>DOĞRU (+1)</span>
-        </button>
-      </div>
+        <!-- Adım 1..6: Kart Sorgulama Ekranı -->
+        <div class="mind-card" id="mindStepCard" style="display:none;">
+          <div class="mind-step-badge" id="mindCardStepLabel">Kart 1 / 6</div>
+          <div class="mind-desc">Aklından tuttuğun sayı bu listede var mı?</div>
+          
+          <div class="mind-grid" id="mindCardNumbersGrid"></div>
 
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-secondary" style="flex:1;" id="tabuStartBtn" onclick="toggleTabuGame()">
-          ▶️ Oyunu Başlat
-        </button>
-        <button class="btn btn-secondary" onclick="resetTabuGame()" title="Sıfırla">
-          🔄 Sıfırla
-        </button>
+          <div class="mind-actions">
+            <button class="mind-btn-no" onclick="answerMindCard(false)">
+              ❌ Hayır, Yok
+            </button>
+            <button class="mind-btn-yes" onclick="answerMindCard(true)">
+              ✅ Evet, Burada!
+            </button>
+          </div>
+        </div>
+
+        <!-- Adım 7: Zihin Tarama Efekti -->
+        <div class="mind-card" id="mindStepScanning" style="display:none;">
+          <div class="mind-step-badge">⚡ Analiz Ediliyor</div>
+          <div class="mind-title" style="color:#c084fc;">Düşüncelerin Taranıyor...</div>
+          <div class="mind-desc" style="font-size:15px; margin: 20px 0;">
+            Gözlerini kapat ve sayıyı tekrar düşün... 👁️
+          </div>
+        </div>
+
+        <!-- Adım 8: Sonuç Ekranı -->
+        <div class="mind-card" id="mindStepResult" style="display:none;">
+          <div class="mind-step-badge">🎉 Zihin Okundu!</div>
+          <div class="mind-desc">Aklından tuttuğun sayı:</div>
+          <div style="font-size: 68px; font-weight: 900; color: #38bdf8; text-shadow: 0 0 25px rgba(56,189,248,0.6);" id="mindFinalNumber">
+            42
+          </div>
+          <div class="mind-desc">Nasıl bildim ama? 😉</div>
+          <button class="btn" style="width:100%; margin-top:10px;" onclick="restartMindGame()">
+            🔄 Başka Bir Arkadaşına Dene
+          </button>
+        </div>
       </div>
     </section>
 
     <div class="app-footer-info">
-      Şansa Bırak • <span class="app-version-text">v1.2.1</span>
+      Şansa Bırak • <span class="app-version-text">v1.3.0</span>
     </div>
   </main>
 
@@ -1110,7 +1367,7 @@
     // ==========================================
     // ⚙️ UYGULAMA VERSİYONU
     // ==========================================
-    const APP_VERSION = 'v1.2.1';
+    const APP_VERSION = 'v1.3.0';
     document.querySelectorAll('.app-version-text').forEach(el => el.textContent = APP_VERSION);
 
     // ==========================================
@@ -1127,8 +1384,8 @@
     }
 
     function switchSubTool(toolKey, el) {
-      document.querySelectorAll('.sub-tool-view').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.sub-nav-pill').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#view-decide .sub-tool-view').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#view-decide .sub-nav-pill').forEach(p => p.classList.remove('active'));
       const targetTool = document.getElementById('tool-' + toolKey);
       if (targetTool) targetTool.classList.add('active');
       if (el) el.classList.add('active');
@@ -1136,108 +1393,255 @@
       if (toolKey === 'wheel') drawWheel();
     }
 
+    function switchPartyGame(gameKey, el) {
+      document.querySelectorAll('#view-party .sub-tool-view').forEach(g => g.classList.remove('active'));
+      document.querySelectorAll('#view-party .sub-nav-pill').forEach(p => p.classList.remove('active'));
+      const targetGame = document.getElementById('game-' + gameKey);
+      if (targetGame) targetGame.classList.add('active');
+      if (el) el.classList.add('active');
+      vibrate(10);
+    }
+
     // ==========================================
-    // 🔮 GÜNÜN ŞANS FALI MANTIĞI
+    // 🔮 GÜNÜN KARTI (FAL & BİLGELİK) MANTIĞI
     // ==========================================
-    let fortuneList = [
-      "Bugün o mesajı sen atma, arkana yaslan ve bekle. Top onların sahasında.",
-      "O diyete bugün değil, yarın başla. Kendine bir tatlı ödülü ver!",
-      "Aklındaki o çılgın fikri hayata geçirmenin tam sırası. Olmazsa 'şansa bıraktım' dersin.",
-      "Bugün mantığını bir kenara bırak; kalbinin ilk dediği seçenek doğru çıkacak.",
-      "Günün kuralı: 'Hemen geliyorum' diyen arkadaşına en az 40 dakika pay bırak.",
-      "Gereksiz harcamalardan uzak dur... Tabii kahve ve tatlı hariç!"
+    let currentDailyMode = 'fal'; // 'fal' veya 'wisdom'
+
+    // Fal Veri Havuzu (fal.json yedeği)
+    let falList = [
+      "Bugün o mesajı ilk atan sen olma; arkana yaslan, top onların sahasında kalsın. 📱",
+      "'5 dakikaya oradayım' diyen arkadaşına en az yarım saat pay bırak, kahven soğumasın. ⏰",
+      "Bugün kimseyle laf yarışına girme; 'he he' de ve günün tadını çıkar. 🧘",
+      "Seni aramasını beklediğin kişi bugün aramayabilir ama çok daha neşeli bir haber kapıda. ✨",
+      "Bugün enerjini seni yoranlara değil, yüzünü güldüren insanlara sakla. 🌻",
+      "O diyete bugün değil yarın başla; bugün kendine sevdiğin bir tatlı ödülü ver! 🍰",
+      "Gereksiz harcamalardan uzak dur... Tabii konu nefis bir kahve veya tatlı değilse! ☕",
+      "Bugün dinlenme günü ilan edildi; fazladan bir bölüm dizi izlemeyi hak ettin. 🎬",
+      "Bugün içine ilk doğan hisse güven; ilk aklına gelen seçenek doğru çıkacak. 🧭",
+      "Evden çıkmadan önce şarjını ve anahtarlarını iki kez kontrol et, günün aksamasın! 🔑"
     ];
 
-    async function loadFortuneData() {
+    // Bilgelik Veri Havuzu (sozler.json yedeği)
+    let wisdomList = [
+      { quote: "Hayal gücü bilgiden daha önemlidir. Bilgi sınırlıdır, hayal gücü ise dünyayı kuşatır.", author: "Albert Einstein" },
+      { quote: "Zihnini kontrol edebilirsin, dışındaki olayları değil. Bunu anladığın an gerçek gücü bulacaksın.", author: "Marcus Aurelius" },
+      { quote: "Hiçbir şeyden korkmamalıyız, sadece anlamaya çalışmalıyız. Şimdi daha çok anlama zamanı.", author: "Marie Curie" },
+      { quote: "Bildiğim tek şey, hiçbir şey bilmediğimdir.", author: "Sokrates" },
+      { quote: "Bir yerlerde inanılmaz bir şey keşfedilmeyi bekliyor.", author: "Carl Sagan" },
+      { quote: "Tabiatın kitabını okumak istiyorsan, onun yazıldığı dili, yani matematiği öğrenmelisin.", author: "Galileo Galilei" }
+    ];
+
+    async function loadJsonFiles() {
+      // fal.json yükle
       try {
-        const response = await fetch('./sozler.json');
-        if (response.ok) {
-          const data = await response.json();
-          if (Array.isArray(data) && data.length > 0) fortuneList = data;
+        const resFal = await fetch('./fal.json');
+        if (resFal.ok) {
+          const dataFal = await resFal.json();
+          if (Array.isArray(dataFal) && dataFal.length > 0) falList = dataFal;
         }
-      } catch (err) {}
+      } catch (e) {}
+
+      // sozler.json yükle
+      try {
+        const resSozler = await fetch('./sozler.json');
+        if (resSozler.ok) {
+          const dataSozler = await resSozler.json();
+          if (Array.isArray(dataSozler) && dataSozler.length > 0) wisdomList = dataSozler;
+        }
+      } catch (e) {}
     }
 
     const colorsList = ["Gece Mavisi", "Zümrüt Yeşili", "Alev Kırmızısı", "Güneş Sarısı", "Neon Pembe", "Mor"];
-    let currentFortune = {};
+    let currentDailyData = {
+      fal: {},
+      wisdom: {}
+    };
 
-    async function initDailyFortune() {
-      await loadFortuneData();
+    async function initDailyCard() {
+      await loadJsonFiles();
       const todayKey = new Date().toISOString().slice(0, 10);
-      const saved = localStorage.getItem('sansa_birak_daily');
+      const saved = localStorage.getItem('sansa_birak_daily_store');
+      let needsRefresh = true;
+
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
           if (parsed.date === todayKey) {
-            currentFortune = parsed;
-            renderDailyCard();
-            return;
+            currentDailyData = parsed.data;
+            needsRefresh = false;
           }
-        } catch(e) {}
+        } catch (e) {}
       }
-      refreshDailyCard();
+
+      if (needsRefresh) refreshDailyCard();
+      else renderDailyCard();
+    }
+
+    function switchDailyMode(mode) {
+      currentDailyMode = mode;
+      const btnFal = document.getElementById('btnModeFal');
+      const btnWisdom = document.getElementById('btnModeWisdom');
+      const cardEl = document.getElementById('dailyCardElement');
+      const badgeEl = document.getElementById('dailyCardBadge');
+      const metricsEl = document.getElementById('dailyMetricsGroup');
+      const authorEl = document.getElementById('dailyAuthorSign');
+
+      if (mode === 'fal') {
+        btnFal.classList.add('active');
+        btnWisdom.classList.remove('active');
+        cardEl.classList.remove('wisdom-theme');
+        badgeEl.textContent = '✨ Günün Falı';
+        badgeEl.classList.remove('wisdom-badge');
+        metricsEl.style.display = 'grid';
+        authorEl.style.display = 'none';
+      } else {
+        btnWisdom.classList.add('active');
+        btnFal.classList.remove('active');
+        cardEl.classList.add('wisdom-theme');
+        badgeEl.textContent = '🏛️ Günün Bilgeliği';
+        badgeEl.classList.add('wisdom-badge');
+        metricsEl.style.display = 'none';
+        authorEl.style.display = 'block';
+      }
+      renderDailyCard();
+      vibrate(15);
     }
 
     function refreshDailyCard() {
-      currentFortune = {
-        date: new Date().toISOString().slice(0, 10),
-        quote: fortuneList[Math.floor(Math.random() * fortuneList.length)],
+      // Fal üretimi
+      const rawFal = falList[Math.floor(Math.random() * falList.length)];
+      currentDailyData.fal = {
+        quote: typeof rawFal === 'string' ? rawFal : (rawFal.quote || rawFal.soz || ''),
         num: Math.floor(Math.random() * 99) + 1,
         rate: Math.floor(Math.random() * 36) + 65,
         color: colorsList[Math.floor(Math.random() * colorsList.length)]
       };
-      localStorage.setItem('sansa_birak_daily', JSON.stringify(currentFortune));
+
+      // Bilgelik üretimi
+      const rawWisdom = wisdomList[Math.floor(Math.random() * wisdomList.length)];
+      if (typeof rawWisdom === 'string') {
+        const parts = rawWisdom.split(' - ');
+        currentDailyData.wisdom = {
+          quote: parts[0] || rawWisdom,
+          author: parts[1] || 'Bilim İnsanı'
+        };
+      } else {
+        currentDailyData.wisdom = {
+          quote: rawWisdom.quote || rawWisdom.soz || rawWisdom.text || '',
+          author: rawWisdom.author || rawWisdom.yazar || rawWisdom.kim || 'Düşünür'
+        };
+      }
+
+      const todayKey = new Date().toISOString().slice(0, 10);
+      localStorage.setItem('sansa_birak_daily_store', JSON.stringify({
+        date: todayKey,
+        data: currentDailyData
+      }));
+
       renderDailyCard();
     }
 
     function renderDailyCard() {
-      const q = document.getElementById('dailyQuoteText');
-      const n = document.getElementById('dailyLuckyNumber');
-      const r = document.getElementById('dailyLuckyRate');
-      const c = document.getElementById('dailyLuckyColor');
-      if (q) q.textContent = `"${currentFortune.quote}"`;
-      if (n) n.textContent = currentFortune.num;
-      if (r) r.textContent = `%${currentFortune.rate}`;
-      if (c) c.textContent = currentFortune.color;
+      const qEl = document.getElementById('dailyQuoteText');
+      const authorEl = document.getElementById('dailyAuthorSign');
+
+      if (currentDailyMode === 'fal') {
+        if (qEl) qEl.textContent = `"${currentDailyData.fal.quote}"`;
+        document.getElementById('dailyLuckyNumber').textContent = currentDailyData.fal.num;
+        document.getElementById('dailyLuckyRate').textContent = `%${currentDailyData.fal.rate}`;
+        document.getElementById('dailyLuckyColor').textContent = currentDailyData.fal.color;
+      } else {
+        if (qEl) qEl.textContent = `"${currentDailyData.wisdom.quote}"`;
+        if (authorEl) authorEl.textContent = `— ${currentDailyData.wisdom.author}`;
+      }
     }
 
     // ==========================================
-    // 🔮 MİSTİK KARAR KÜRESİ MANTIĞI
+    // 🔮 MİSTİK KARAR KÜRESİ MANTIĞI & COOLDOWN
     // ==========================================
     const mysticAnswers = [
-      "Kesinlikle evet!",
-      "Yıldızlar seninle ✨",
-      "Hiç şüphen olmasın.",
-      "Zamanı tam şimdi!",
-      "İşaretler çok olumlu.",
-      "Şu an sisli, sonra sor 🌫️",
-      "Cevap kalbinde saklı.",
-      "Akışa bırak ve bekle.",
-      "Henüz netleşmedi...",
-      "Bugün pek uygun değil.",
-      "Mantığınla tekrar düşün.",
-      "Kader başka plan yapıyor.",
-      "İç sesine kulak ver.",
-      "Risk almaya değer!",
-      "Biraz sabırlı ol."
+      // Samimi & Güvenli Yanıtlar
+      "Tabii ki arkandayım, çok güzel olacak! 🤝",
+      "Bence harika fikir, düşünme bile! 🥳",
+      "İçimden bir ses yüzünü güldürecek diyor. 🌟",
+      "Kesinlikle değer, keyfine bak! ✨",
+      "Ben onay verdim, her şey yolunda! 🧿",
+      "Güzel bir haber kapıda gibi hissediyorum. 🎁",
+      // Sakinleştiren Yanıtlar
+      "Şu an kafan biraz karışık, sonra tekrar sor. 💭",
+      "Bence acele etme, biraz zamana bırakalım. ⏳",
+      "Gel önce bir kahve içelim, sonra düşünürüz. ☕",
+      "Akışına bırak, kendiliğinden çözülecek. 🌊",
+      "Bugün dinlenme günü olsun, yorma kendini. 🛋️",
+      "Yarın sabah kafan daha netken bir daha bakalım. 🌙",
+      // Dost Tavsiyesi
+      "Dost acı söyler; bugün hiç o gün değil. 🛑",
+      "Ben senin yerinde olsam iki kere düşünürdüm. 🧐",
+      "Boş ver bunu, enerjini güzel şeylere sakla. 🙅",
+      "Mantığın ne diyorsa onu dinle, sakin kal. 🧠",
+      "Kader bile 'dur bakalım' diyor, biraz bekle. 🤷"
+    ];
+
+    const cooldownRejections = [
+      "Sakin ol şampiyon, evrenin de bir işlemci hızı var! ⏳",
+      "Bir dur nefes al, kader de insan evladı! ☕",
+      "Küre ısındı fan açacak, az bekle... 🔥",
+      "Üst üste sorma, kaderi de çelişkiye düşürdün! 😅",
+      "Evren şu an başka masaya bakıyor, birazdan sende. 🛸",
+      "Kader yükleniyor... Azıcık sabır yahu! 🌀"
     ];
 
     let isOrbThinking = false;
+    let orbCooldownUntil = 0;
+    let cooldownTimerInterval = null;
 
     function askMysticOrb() {
-      if (isOrbThinking) return;
-      isOrbThinking = true;
-
+      const now = Date.now();
       const orb = document.getElementById('mysticOrb');
       const text = document.getElementById('orbAnswer');
+      const hint = document.getElementById('mysticHintText');
+
+      if (isOrbThinking) return;
+
+      // Cooldown Kontrolü (10 Saniye)
+      if (now < orbCooldownUntil) {
+        const remainingSeconds = Math.ceil((orbCooldownUntil - now) / 1000);
+        vibrate([40, 60, 40]);
+        playTone(180, 'sawtooth', 0.12);
+
+        if (orb) {
+          orb.classList.remove('wobble-reject');
+          void orb.offsetWidth;
+          orb.classList.add('wobble-reject');
+        }
+
+        const rejectQuote = cooldownRejections[Math.floor(Math.random() * cooldownRejections.length)];
+        if (text) text.textContent = rejectQuote;
+        if (hint) {
+          hint.textContent = `⏳ Küre dinleniyor (${remainingSeconds} sn)...`;
+          hint.classList.add('cooldown-text');
+        }
+        return;
+      }
+
+      // Küreyi Çalıştır
+      isOrbThinking = true;
+      orbCooldownUntil = Date.now() + 10000; // 10 saniye bekleme
 
       vibrate([30, 40, 30]);
       playMysticSound();
 
-      if (orb) orb.classList.add('shaking');
+      if (orb) {
+        orb.classList.remove('wobble-reject');
+        orb.classList.add('shaking');
+      }
       if (text) {
         text.style.opacity = '0';
         text.style.transform = 'scale(0.8)';
+      }
+      if (hint) {
+        hint.textContent = "Kaderin fısıltısı dinleniyor...";
+        hint.classList.remove('cooldown-text');
       }
 
       setTimeout(() => {
@@ -1250,6 +1654,25 @@
         if (orb) orb.classList.remove('shaking');
         isOrbThinking = false;
         vibrate(50);
+
+        // Geri Sayım Sayacı Başlat
+        clearInterval(cooldownTimerInterval);
+        cooldownTimerInterval = setInterval(() => {
+          const rem = Math.ceil((orbCooldownUntil - Date.now()) / 1000);
+          if (rem > 0) {
+            if (hint) {
+              hint.textContent = `✨ Yeni soru için: ${rem} sn bekleyin`;
+              hint.classList.add('cooldown-text');
+            }
+          } else {
+            clearInterval(cooldownTimerInterval);
+            if (hint) {
+              hint.textContent = "Küre hazır! Aklından yeni bir soru tutabilirsin ✨";
+              hint.classList.remove('cooldown-text');
+            }
+          }
+        }, 1000);
+
       }, 650);
     }
 
@@ -1262,7 +1685,7 @@
     }
 
     // ==========================================
-    // 📸 INSTAGRAM STORY OLUŞTURUCU
+    // 📸 INSTAGRAM STORY OLUŞTURUCU (ADAPTİF)
     // ==========================================
     async function shareToInstagramStory() {
       vibrate(30);
@@ -1270,15 +1693,18 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
+      const isWisdom = currentDailyMode === 'wisdom';
+
+      // Arka Plan
       const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
       bgGrad.addColorStop(0, '#090d16');
-      bgGrad.addColorStop(0.4, '#1b1b3a');
+      bgGrad.addColorStop(0.4, isWisdom ? '#0e2438' : '#1e1b4b');
       bgGrad.addColorStop(1, '#090d16');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, 1080, 1920);
 
       const glowGrad = ctx.createRadialGradient(540, 600, 50, 540, 600, 500);
-      glowGrad.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
+      glowGrad.addColorStop(0, isWisdom ? 'rgba(6, 182, 212, 0.25)' : 'rgba(236, 72, 153, 0.25)');
       glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, 1080, 1920);
@@ -1290,12 +1716,13 @@
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = '32px -apple-system, sans-serif';
-      ctx.fillText('GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
+      ctx.fillText(isWisdom ? 'GÜNÜN BİLGELİĞİ & İLHAMI' : 'GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
 
+      // Kart
       const cardX = 90, cardY = 520, cardW = 900, cardH = 920;
       ctx.save();
-      ctx.fillStyle = 'rgba(19, 27, 46, 0.85)';
-      ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+      ctx.fillStyle = 'rgba(19, 27, 46, 0.88)';
+      ctx.strokeStyle = isWisdom ? 'rgba(6, 182, 212, 0.5)' : 'rgba(236, 72, 153, 0.5)';
       ctx.lineWidth = 4;
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
@@ -1306,7 +1733,7 @@
         ctx.lineTo(cardX + cardW - r, cardY);
         ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
         ctx.lineTo(cardX + cardW, cardY + cardH - r);
-        ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - r, cardY + cardH);
+        ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
         ctx.lineTo(cardX + r, cardY + cardH);
         ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - r);
         ctx.lineTo(cardX, cardY + r);
@@ -1316,31 +1743,38 @@
       ctx.stroke();
       ctx.restore();
 
-      ctx.fillStyle = '#ec4899';
+      ctx.fillStyle = isWisdom ? '#38bdf8' : '#ec4899';
       ctx.font = 'bold 32px -apple-system, sans-serif';
-      ctx.fillText('🔮 KADERİN MESAJI', 540, 620);
+      ctx.fillText(isWisdom ? '🏛️ GÜNÜN BİLGE SÖZÜ' : '🔮 GÜNÜN MESAJI', 540, 620);
 
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 44px -apple-system, sans-serif';
-      wrapText(ctx, `"${currentFortune.quote}"`, 540, 740, 760, 64);
+      const quoteToDraw = isWisdom ? currentDailyData.wisdom.quote : currentDailyData.fal.quote;
+      wrapText(ctx, `"${quoteToDraw}"`, 540, 740, 760, 64);
 
-      const statY = 1140;
-      drawStoryStat(ctx, 230, statY, 'UĞURLU SAYI', currentFortune.num.toString());
-      drawStoryStat(ctx, 540, statY, 'ŞANS ORANI', `%${currentFortune.rate}`);
-      drawStoryStat(ctx, 850, statY, 'GÜNÜN RENGİ', currentFortune.color);
+      if (isWisdom) {
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'italic bold 38px -apple-system, sans-serif';
+        ctx.fillText(`— ${currentDailyData.wisdom.author}`, 540, 1180);
+      } else {
+        const statY = 1140;
+        drawStoryStat(ctx, 230, statY, 'UĞURLU SAYI', currentDailyData.fal.num.toString());
+        drawStoryStat(ctx, 540, statY, 'ŞANS ORANI', `%${currentDailyData.fal.rate}`);
+        drawStoryStat(ctx, 850, statY, 'GÜNÜN RENGİ', currentDailyData.fal.color);
+      }
 
       ctx.fillStyle = '#cbd5e1';
       ctx.font = '32px -apple-system, sans-serif';
-      ctx.fillText('Sen de çarkı çevir, kaderini gör 📲', 540, 1600);
+      ctx.fillText('Sen de kaderini gör ve şansa bırak 📲', 540, 1600);
       ctx.fillStyle = '#6366f1';
       ctx.font = 'bold 36px -apple-system, sans-serif';
       ctx.fillText('#ŞansaBırak', 540, 1660);
 
       canvas.toBlob(async (blob) => {
-        const file = new File([blob], 'sansa-birak-gunun-fali.png', { type: 'image/png' });
+        const file = new File([blob], 'sansa-birak-story.png', { type: 'image/png' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
-            await navigator.share({ files: [file], title: 'Günün Şans Falı' });
+            await navigator.share({ files: [file], title: 'Günün Mesajı' });
           } catch (e) { fallbackDownload(blob); }
         } else { fallbackDownload(blob); }
       }, 'image/png');
@@ -1374,11 +1808,91 @@
       a.href = URL.createObjectURL(blob);
       a.download = 'sansa-birak-story.png';
       a.click();
-      alert("Story görselin indirildi! Instagram Hikayene ekleyebilirsin ✨");
+      alert("Görsel indirildi! Instagram Hikayene ekleyebilirsin ✨");
     }
 
     // ==========================================
-    // 🤫 TABU OYUNU MANTIĞI
+    // 🧠 MİSTİK ZİHİN OKUYUCU (1-63 OYUNU)
+    // ==========================================
+    let mindCurrentCardIndex = 0;
+    let mindGuessedSum = 0;
+
+    // 6 kartın sayılarını dinamik üret (1, 2, 4, 8, 16, 32 bitleri)
+    function generateMindCardNumbers(bitIndex) {
+      const bitValue = 1 << bitIndex;
+      const numbers = [];
+      for (let i = 1; i <= 63; i++) {
+        if ((i & bitValue) !== 0) numbers.push(i);
+      }
+      return numbers;
+    }
+
+    function startMindGame() {
+      mindCurrentCardIndex = 0;
+      mindGuessedSum = 0;
+      document.getElementById('mindStepIntro').style.display = 'none';
+      document.getElementById('mindStepCard').style.display = 'flex';
+      document.getElementById('mindStepScanning').style.display = 'none';
+      document.getElementById('mindStepResult').style.display = 'none';
+      renderMindCard();
+      vibrate(20);
+    }
+
+    function renderMindCard() {
+      const label = document.getElementById('mindCardStepLabel');
+      const grid = document.getElementById('mindCardNumbersGrid');
+      label.textContent = `Kart ${mindCurrentCardIndex + 1} / 6`;
+
+      const numbers = generateMindCardNumbers(mindCurrentCardIndex);
+      grid.innerHTML = '';
+      numbers.forEach(num => {
+        const item = document.createElement('div');
+        item.className = 'mind-grid-num';
+        item.textContent = num;
+        grid.appendChild(item);
+      });
+      grid.scrollTop = 0;
+    }
+
+    function answerMindCard(hasNumber) {
+      if (hasNumber) {
+        mindGuessedSum += (1 << mindCurrentCardIndex);
+        playTone(650, 'sine', 0.06);
+        vibrate(25);
+      } else {
+        playTone(350, 'sine', 0.06);
+        vibrate(15);
+      }
+
+      mindCurrentCardIndex++;
+
+      if (mindCurrentCardIndex < 6) {
+        renderMindCard();
+      } else {
+        // Tüm kartlar bitti -> Zihin Tarama Aşaması
+        document.getElementById('mindStepCard').style.display = 'none';
+        document.getElementById('mindStepScanning').style.display = 'flex';
+        playMysticSound();
+        vibrate([50, 70, 50]);
+
+        setTimeout(() => {
+          document.getElementById('mindStepScanning').style.display = 'none';
+          document.getElementById('mindStepResult').style.display = 'flex';
+          document.getElementById('mindFinalNumber').textContent = mindGuessedSum || '0';
+          playWinSound();
+          vibrate(80);
+        }, 1600);
+      }
+    }
+
+    function restartMindGame() {
+      document.getElementById('mindStepResult').style.display = 'none';
+      document.getElementById('mindStepIntro').style.display = 'flex';
+      vibrate(15);
+    }
+
+    // ==========================================
+    // 🤫 ANLAT BAKALIM (TABU OYUNU) MANTIĞI
     // ==========================================
     let tabuCards = [
       { word: "KAHVE", forbidden: ["Çay", "Fincan", "Kafein", "Sıcak", "Starbucks"] },
@@ -1862,7 +2376,7 @@
     // ==========================================
     // 🚀 BAŞLANGIÇ
     // ==========================================
-    initDailyFortune();
+    initDailyCard();
     loadTabuData().then(nextTabuCard);
     renderTags();
     setDiceDots(document.getElementById('dice1'), 1);

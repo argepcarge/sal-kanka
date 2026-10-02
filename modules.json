@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "active_modules": [
+    {
+      "id": "sayko",
+      "name": "Sayko Pusula 👁️🌀",
+      "description": "Absürt aydınlanmalar, saykodelik mesajlar ve garip evren teorileri",
+      "badge": "🌀 KOZMİK KAFA",
+      "file": "./sayko.json",
+      "color_theme": {
+        "accent": "#a855f7",
+        "glow": "rgba(168, 85, 247, 0.4)",
+        "border": "rgba(236, 72, 153, 0.5)"
+      }
+    },
+    {
+      "id": "tabu",
+      "name": "Anlat Bakalım",
+      "description": "Yasaklı kelimeler olmadan anlatma oyunu",
+      "badge": "🤫 PARTİ OYUNU",
+      "file": "./tabu.json"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sansa-birak-v3';
+const CACHE_NAME = 'sansa-birak-v4';
 const STATIC_ASSETS = [
   './manifest.json',
   './icon-192.png',

@@ -725,23 +725,22 @@
       if (!canvas) return;
 
       canvas.width = 1080;
-      canvas.height = 500;
+      canvas.height = 480;
       const ctx = canvas.getContext('2d');
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, 1080, 480);
 
       // Banner Arka Planı (Şık neon kenarlı koyu kutu)
-      const bX = 40, bY = 20, bW = 1000, bH = 460, bR = 36;
+      const bX = 50, bY = 20, bW = 980, bH = 440, bR = 32;
       ctx.save();
-
       ctx.shadowColor = 'rgba(244, 63, 94, 0.45)';
       ctx.shadowBlur = 35;
-      ctx.shadowOffsetY = 12;
+      ctx.shadowOffsetY = 10;
 
       const grad = ctx.createLinearGradient(bX, bY, bX + bW, bY + bH);
-      grad.addColorStop(0, '#1c081e');
-      grad.addColorStop(0.5, '#2e0b23');
-      grad.addColorStop(1, '#0e0517');
+      grad.addColorStop(0, '#1a061c');
+      grad.addColorStop(0.5, '#2c0a23');
+      grad.addColorStop(1, '#0d0417');
       ctx.fillStyle = grad;
 
       ctx.beginPath();
@@ -755,30 +754,32 @@
       // Neon Çerçeve Çizgisi
       ctx.shadowColor = 'transparent';
       ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 6;
+      ctx.lineWidth = 5;
       ctx.stroke();
       ctx.restore();
 
-      // Hizalamayı kesin olarak merkeze sabitle
+      // 1. En üstte: Sadece #ŞansaBırak (Tam Ortada)
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-
-      // 1. En üstte: Sadece #ŞansaBırak
       ctx.fillStyle = '#fda4af';
-      ctx.font = 'bold 26px -apple-system, sans-serif';
-      ctx.fillText('#ŞansaBırak', 540, 85);
+      ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText('#ŞansaBırak', 540, 75, 850);
 
-      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ!
+      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ! (Punto 42px ve maxWidth 860px ile asla taşmaz)
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
       ctx.fillStyle = '#ffffff';
-      ctx.font = '900 50px -apple-system, sans-serif';
-      ctx.fillText('BAŞARIYLA BOŞ VERİLDİ! 🛋️', 540, 165);
+      ctx.font = '900 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText('BAŞARIYLA BOŞ VERİLDİ! 🛋️', 540, 150, 860);
 
-      // 3. Ortadaki Absürt Cümle (Taşmayı önlemek için 820px genişlik limiti)
+      // 3. Ortadaki Absürt Cümle
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
       ctx.fillStyle = '#fbcfe8';
-      ctx.font = '600 28px -apple-system, sans-serif';
+      ctx.font = '600 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 820);
       detLines.forEach((l, i) => {
-        ctx.fillText(l, 540, 245 + (i * 38));
+        ctx.fillText(l, 540, 225 + (i * 36), 840);
       });
 
       // Kesikli Ayraç Çizgisi
@@ -786,15 +787,17 @@
       ctx.lineWidth = 2;
       ctx.setLineDash([10, 8]);
       ctx.beginPath();
-      ctx.moveTo(120, 360);
-      ctx.lineTo(960, 360);
+      ctx.moveTo(120, 335);
+      ctx.lineTo(960, 335);
       ctx.stroke();
       ctx.setLineDash([]);
 
       // 4. En altta: Sadece boşveriş sayısı ("5 kere boşverdi")
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
       ctx.fillStyle = '#34d399';
-      ctx.font = '900 32px -apple-system, sans-serif';
-      ctx.fillText(`${totalBosverCount} kere boşverdi ✨`, 540, 420);
+      ctx.font = '900 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.fillText(`${totalBosverCount} kere boşverdi ✨`, 540, 395, 850);
 
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'bosverildi-banner.png', { type: 'image/png' });

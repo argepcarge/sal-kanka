@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="Günün şans falı, tavsiyesi ve eğlenceli karar çarkı!">
-    <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="ŞansaBırak">
   <meta name="application-name" content="ŞansaBırak">
@@ -43,16 +43,21 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
-      padding-bottom: 74px;
+      padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
     }
 
+    /* iOS Durum Çubuğu / Çentik Alanı Düzeltildi */
     header {
       padding: 14px 18px;
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
+      padding-left: calc(18px + env(safe-area-inset-left, 0px));
+      padding-right: calc(18px + env(safe-area-inset-right, 0px));
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -121,7 +126,6 @@
       gap: 14px;
     }
 
-    /* Ad Banner Slot */
     .ad-slot {
       background: rgba(255, 255, 255, 0.02);
       border: 1px dashed rgba(255, 255, 255, 0.15);
@@ -134,7 +138,6 @@
       text-transform: uppercase;
     }
 
-    /* GÜNÜN ŞANS KARTI (INSTA STORY HOOK) */
     .daily-card {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15));
       border: 1px solid rgba(236, 72, 153, 0.35);
@@ -233,7 +236,6 @@
       transform: scale(0.97);
     }
 
-    /* Tab content sections */
     .tab-section {
       display: none;
       flex-direction: column;
@@ -250,7 +252,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* WHEEL TAB */
     .wheel-container {
       position: relative;
       width: 320px;
@@ -360,6 +361,7 @@
       width: 100%;
     }
 
+    /* iOS Otomatik Yakınlaştırma (Zoom) Önleyici Font Boyutu (16px) */
     input[type="text"], input[type="number"], textarea {
       flex: 1 1 0%;
       min-width: 0;
@@ -369,7 +371,7 @@
       padding: 12px 14px;
       border-radius: 12px;
       color: #fff;
-      font-size: 15px;
+      font-size: 16px;
       outline: none;
     }
 
@@ -442,7 +444,6 @@
       font-weight: bold;
     }
 
-    /* ZAR */
     .dice-area {
       display: flex;
       justify-content: center;
@@ -483,7 +484,6 @@
       visibility: hidden;
     }
 
-    /* COIN */
     .coin-area {
       display: flex;
       justify-content: center;
@@ -527,7 +527,6 @@
       text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
     }
 
-    /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -579,21 +578,22 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* BOTTOM NAV */
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 64px;
+      height: calc(64px + env(safe-area-inset-bottom, 0px));
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       justify-content: space-around;
-      align-items: center;
+      align-items: flex-start;
+      padding-top: 8px;
       z-index: 50;
-      padding-bottom: env(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     .nav-item {
@@ -609,7 +609,6 @@
       gap: 4px;
       cursor: pointer;
       width: 25%;
-      height: 100%;
       transition: color 0.15s;
     }
 
@@ -621,7 +620,6 @@
       color: var(--accent);
     }
 
-    /* Gizli Story Canvas */
     #storyCanvas {
       display: none;
     }
@@ -629,7 +627,7 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- HEADER (Çentik Payı Verildi) -->
   <header>
     <div class="brand">
       <div class="brand-logo">✨</div>
@@ -643,7 +641,7 @@
   </header>
 
   <main>
-    <!-- GÜNÜN ŞANS & FAL KARTI (INSTA VIRAL HOOK) -->
+    <!-- GÜNÜN ŞANS & FAL KARTI -->
     <div class="daily-card">
       <div class="daily-card-header">
         <div class="daily-card-badge">✨ Günün Şans Falı</div>
@@ -786,8 +784,8 @@
   <canvas id="storyCanvas" width="1080" height="1920"></canvas>
 
   <script>
-    // --- GÜNÜN ŞANS FALI & TAVSİYELERİ ---
-    const fortuneList = [
+    // --- GÜNÜN ŞANS FALI (JSON + FALLBACK HAVUZU) ---
+    let fortuneList = [
       "Bugün o mesajı sen atma, arkana yaslan ve bekle. Top onların sahasında.",
       "O diyete bugün değil, yarın başla. Kendine bir tatlı ödülü ver!",
       "Aklındaki o çılgın fikri hayata geçirmenin tam sırası. Olmazsa 'şansa bıraktım' dersin.",
@@ -803,21 +801,38 @@
       "Kararsızlık zaman kaybıdır. Çarkı çevir, arkana yaslan!"
     ];
 
-    const colorsList = ["Gece Mavisi", "Zümrüt Yeşili", "Alev Kırmızısı", "Güneş Sarısı", "Neon Pembe", "Mor"];
+    // sozler.json dosyasından asenkron olarak yükleme
+    async function loadFortuneData() {
+      try {
+        const response = await fetch('./sozler.json');
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data) && data.length > 0) {
+            fortuneList = data;
+          }
+        }
+      } catch (err) {
+        console.warn('sozler.json okunamadı, yerleşik sözler kullanılacak.', err);
+      }
+    }
 
+    const colorsList = ["Gece Mavisi", "Zümrüt Yeşili", "Alev Kırmızısı", "Güneş Sarısı", "Neon Pembe", "Mor"];
     let currentFortune = {};
 
-    function initDailyFortune() {
+    async function initDailyFortune() {
+      await loadFortuneData();
       const todayKey = new Date().toISOString().slice(0, 10);
       const saved = localStorage.getItem('sansa_birak_daily');
       
       if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.date === todayKey) {
-          currentFortune = parsed;
-          renderDailyCard();
-          return;
-        }
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.date === todayKey) {
+            currentFortune = parsed;
+            renderDailyCard();
+            return;
+          }
+        } catch(e) {}
       }
       refreshDailyCard();
     }
@@ -847,13 +862,13 @@
       document.getElementById('dailyLuckyColor').textContent = currentFortune.color;
     }
 
-    // --- INSTAGRAM STORY GÖRSELİ OLUŞTURUCU (CANVAS) ---
+    // --- INSTAGRAM STORY GÖRSELİ OLUŞTURUCU ---
     async function shareToInstagramStory() {
       vibrate(30);
       const canvas = document.getElementById('storyCanvas');
       const ctx = canvas.getContext('2d');
 
-      // 1. 1080x1920 Gradient Arka Plan
+      // 1. Arka Plan
       const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
       bgGrad.addColorStop(0, '#090d16');
       bgGrad.addColorStop(0.4, '#1b1b3a');
@@ -861,14 +876,14 @@
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, 1080, 1920);
 
-      // Parlama Efektleri (Neon Orblar)
+      // Parlama Efektleri
       const glowGrad = ctx.createRadialGradient(540, 600, 50, 540, 600, 500);
       glowGrad.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
       glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, 1080, 1920);
 
-      // 2. Üst Logo & Başlık
+      // 2. Logo & Başlık
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 54px -apple-system, sans-serif';
       ctx.textAlign = 'center';
@@ -878,7 +893,7 @@
       ctx.font = '32px -apple-system, sans-serif';
       ctx.fillText('GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
 
-      // 3. Ortadaki Şık Kart Kutusu
+      // 3. Kart Kutusu (Geniş Tarayıcı Desteği İçin Fallback'li)
       const cardX = 90;
       const cardY = 520;
       const cardW = 900;
@@ -888,32 +903,41 @@
       ctx.fillStyle = 'rgba(19, 27, 46, 0.85)';
       ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
       ctx.lineWidth = 4;
+      
       ctx.beginPath();
-      ctx.roundRect(cardX, cardY, cardW, cardH, 40);
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(cardX, cardY, cardW, cardH, 40);
+      } else {
+        const r = 40;
+        ctx.moveTo(cardX + r, cardY);
+        ctx.lineTo(cardX + cardW - r, cardY);
+        ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
+        ctx.lineTo(cardX + cardW, cardY + cardH - r);
+        ctx.quadraticCurveTo(cardX + cardW, cardY + cardH, cardX + cardW - r, cardY + cardH);
+        ctx.lineTo(cardX + r, cardY + cardH);
+        ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - r);
+        ctx.lineTo(cardX, cardY + r);
+        ctx.quadraticCurveTo(cardX, cardY, cardX + r, cardY);
+      }
       ctx.fill();
       ctx.stroke();
       ctx.restore();
 
-      // Kart İçi Badge
       ctx.fillStyle = '#ec4899';
       ctx.font = 'bold 32px -apple-system, sans-serif';
       ctx.fillText('🔮 KADERİN MESAJI', 540, 620);
 
-      // Metni Bölerek Satır Satır Yazdırma (Word Wrap)
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 44px -apple-system, sans-serif';
       wrapText(ctx, `"${currentFortune.quote}"`, 540, 740, 760, 64);
 
-      // 4. Alt Metrikler (Sayı, Oran, Renk)
+      // 4. Alt Metrikler
       const statY = 1140;
-      // Kutu 1: Uğurlu Sayı
       drawStoryStat(ctx, 230, statY, 'UĞURLU SAYI', currentFortune.num.toString());
-      // Kutu 2: Şans Oranı
       drawStoryStat(ctx, 540, statY, 'ŞANS ORANI', `%${currentFortune.rate}`);
-      // Kutu 3: Uğurlu Renk
       drawStoryStat(ctx, 850, statY, 'GÜNÜN RENGİ', currentFortune.color);
 
-      // 5. Alt İmza & Call to Action
+      // 5. Alt İmza
       ctx.fillStyle = '#cbd5e1';
       ctx.font = '32px -apple-system, sans-serif';
       ctx.fillText('Sen de çarkı çevir, kaderini gör 📲', 540, 1600);
@@ -921,7 +945,7 @@
       ctx.font = 'bold 36px -apple-system, sans-serif';
       ctx.fillText('#ŞansaBırak', 540, 1660);
 
-      // 6. Paylaşım Tetikleme (Web Share API ile Doğrudan Hikaye / İndirme)
+      // Paylaşım Tetikleme
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'sansa-birak-gunun-fali.png', { type: 'image/png' });
         
@@ -1294,38 +1318,23 @@
     setDiceDots(document.getElementById('dice1'), 1);
     setDiceDots(document.getElementById('dice2'), 6);
   
-    // --- PWA SERVICE WORKER & OTOMATİK GÜNCELLEME YÖNETİMİ ---
+    // --- PWA SERVICE WORKER ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', async () => {
         try {
-          // updateViaCache: 'none' ile tarayıcı sw.js dosyasını asla önbellekten almaz, sunucudan kontrol eder
           const reg = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
-          
-          // Sayfa her açıldığında güncelleme kontrolü yap
           reg.update();
 
-          // Sekmeye geri dönüldüğünde (arka plandan öne gelindiğinde) güncelleme kontrolü yap
           document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
               reg.update();
             }
-          });
-
-          // Yeni bir servis çalışanı bulunduğunda
-          reg.addEventListener('updatefound', () => {
-            const newWorker = reg.installing;
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('Yeni sürüm tespit edildi, sayfa güncelleniyor...');
-              }
-            });
           });
         } catch (err) {
           console.error('Service Worker kayıt hatası:', err);
         }
       });
 
-      // Yeni Service Worker kontrolü devraldığında sayfayı yenileyip en güncel hali göster
       let refreshing = false;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (!refreshing) {
@@ -1352,7 +1361,6 @@
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         if (outcome === 'accepted') {
-          console.log('Kullanıcı PWA kurulumunu kabul etti');
           pwaInstallBtn.style.display = 'none';
         }
         deferredPrompt = null;
@@ -1361,9 +1369,7 @@
 
     window.addEventListener('appinstalled', () => {
       if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
-      console.log('Uygulama başarıyla yüklendi!');
     });
-
   </script>
 </body>
 </html>

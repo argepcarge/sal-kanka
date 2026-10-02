@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Şansa Bırak | Karar Verme & Günün Şans Kartı</title>
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Günün şans falı, tavsiyesi ve eğlenceli karar çarkı!">
+    <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="ŞansaBırak">
+  <meta name="application-name" content="ŞansaBırak">
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --card: #131b2e;
+      --card-border: #22304d;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.35);
+      --pink: #ec4899;
+      --amber: #f59e0b;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #1e1e38 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      padding-bottom: 74px;
+    }
+
+    header {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+    }
+
+    main {
+      flex: 1;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Ad Banner Slot */
+    .ad-slot {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 9px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* GÜNÜN ŞANS KARTI (INSTA STORY HOOK) */
+    .daily-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15));
+      border: 1px solid rgba(236, 72, 153, 0.35);
+      border-radius: 20px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    }
+
+    .daily-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .daily-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: linear-gradient(90deg, #ec4899, #8b5cf6);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .daily-card-refresh {
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .daily-quote {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: #f8fafc;
+      margin-bottom: 14px;
+      min-height: 44px;
+    }
+
+    .daily-metrics {
+      display: grid;
+      grid-template: 1fr / repeat(3, 1fr);
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 12px;
+      padding: 8px;
+      margin-bottom: 12px;
+    }
+
+    .metric-box {
+      text-align: center;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    .insta-share-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(220, 39, 67, 0.35);
+      transition: transform 0.15s ease;
+    }
+
+    .insta-share-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Tab content sections */
+    .tab-section {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .tab-section.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* WHEEL TAB */
+    .wheel-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas#wheelCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 40px rgba(99, 102, 241, 0.2);
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-top: 26px solid #f43f5e;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+      z-index: 10;
+    }
+
+    .wheel-center-btn {
+      position: absolute;
+      width: 74px;
+      height: 74px;
+      background: radial-gradient(circle, #252e4a 0%, #111728 100%);
+      border: 3px solid #f8fafc;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+      z-index: 5;
+      letter-spacing: 0.5px;
+      transition: transform 0.15s ease;
+    }
+
+    .wheel-center-btn:active {
+      transform: scale(0.92);
+    }
+
+    .presets-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .presets-row::-webkit-scrollbar { display: none; }
+
+    .preset-chip {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      padding: 7px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-chip:active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    input[type="text"], input[type="number"], textarea {
+      flex: 1 1 0%;
+      min-width: 0;
+      width: 100%;
+      background: #0b1220;
+      border: 1px solid var(--card-border);
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input[type="number"] {
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-secondary {
+      background: #1e293b;
+      box-shadow: none;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .items-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .item-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .item-tag-del {
+      cursor: pointer;
+      color: #f43f5e;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    /* ZAR */
+    .dice-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 35px 0;
+    }
+
+    .dice {
+      width: 88px;
+      height: 88px;
+      background: #fff;
+      border-radius: 18px;
+      display: grid;
+      grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+      padding: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 -4px 6px rgba(0,0,0,0.15);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .dice.rolling {
+      animation: diceRollAnim 0.5s linear infinite;
+    }
+
+    @keyframes diceRollAnim {
+      0% { transform: rotate(0deg) scale(0.9); }
+      50% { transform: rotate(180deg) scale(1.05); }
+      100% { transform: rotate(360deg) scale(0.9); }
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      background: #1e1e2f;
+      border-radius: 50%;
+      align-self: center;
+      justify-self: center;
+      visibility: hidden;
+    }
+
+    /* COIN */
+    .coin-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 35px 0;
+    }
+
+    .coin {
+      width: 135px;
+      height: 135px;
+      background: radial-gradient(circle, #fbbf24 0%, #d97706 100%);
+      border: 6px solid #fef3c7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 900;
+      color: #78350f;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+      box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3), inset 0 2px 4px rgba(255,255,255,0.6);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .coin.flipping {
+      animation: coinFlipAnim 0.7s ease infinite;
+    }
+
+    @keyframes coinFlipAnim {
+      0% { transform: rotateY(0deg) scale(1); }
+      50% { transform: rotateY(900deg) scale(1.2); }
+      100% { transform: rotateY(1800deg) scale(1); }
+    }
+
+    .number-display {
+      font-size: 64px;
+      font-weight: 900;
+      text-align: center;
+      color: var(--emerald);
+      padding: 20px 0;
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--accent);
+      border-radius: 24px;
+      padding: 28px 22px;
+      text-align: center;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 50px var(--accent-glow);
+      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .modal-result {
+      font-size: 30px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #f43f5e, #ec4899, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* BOTTOM NAV */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      gap: 4px;
+      cursor: pointer;
+      width: 25%;
+      height: 100%;
+      transition: color 0.15s;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 20px;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+    }
+
+    /* Gizli Story Canvas */
+    #storyCanvas {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">✨</div>
+      <div class="brand-title">Şansa Bırak</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="pwaInstallBtn" title="Uygulamayı Yükle" style="display:none; color:#10b981; font-weight:bold;">📲</button>
+      <button class="icon-btn" id="shareBtn" title="Paylaş">📤</button>
+      <button class="icon-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- GÜNÜN ŞANS & FAL KARTI (INSTA VIRAL HOOK) -->
+    <div class="daily-card">
+      <div class="daily-card-header">
+        <div class="daily-card-badge">✨ Günün Şans Falı</div>
+        <div class="daily-card-refresh" onclick="refreshDailyCard()">🎲 Yenile</div>
+      </div>
+      <div class="daily-quote" id="dailyQuoteText">"Yükleniyor..."</div>
+      <div class="daily-metrics">
+        <div class="metric-box">
+          <div class="metric-label">Uğurlu Sayı</div>
+          <div class="metric-value" id="dailyLuckyNumber">7</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Şans Oranı</div>
+          <div class="metric-value" id="dailyLuckyRate">%88</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Günün Rengi</div>
+          <div class="metric-value" id="dailyLuckyColor">Mavi</div>
+        </div>
+      </div>
+      <button class="insta-share-btn" onclick="shareToInstagramStory()">
+        📸 Hikayende Paylaş (Story Yap)
+      </button>
+    </div>
+
+    <!-- REKLAM BANNER ALANI -->
+    <div class="ad-slot">
+      <span>📢 Sponsorlu Reklam Alanı (Google AdSense / Banner)</span>
+    </div>
+
+    <!-- 1. TAB: ÇARK -->
+    <section class="tab-section active" id="tab-wheel">
+      <div class="presets-row">
+        <div class="preset-chip" onclick="loadPreset('food')">🍔 Ne Yesek?</div>
+        <div class="preset-chip" onclick="loadPreset('activity')">🏃 Ne Yapsak?</div>
+        <div class="preset-chip" onclick="loadPreset('movie')">🎬 Ne İzlesek?</div>
+        <div class="preset-chip" onclick="loadPreset('game')">🎮 Ne Oynasak?</div>
+      </div>
+
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="640" height="640"></canvas>
+        <button class="wheel-center-btn" id="spinBtn">ÇEVİR</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>SEÇENEKLER (<span id="itemCount">0</span>)</span>
+          <span style="font-size:12px; cursor:pointer; color:#f43f5e;" onclick="clearAllItems()">Tümünü Sil</span>
+        </div>
+        <div class="input-row">
+          <input type="text" id="newItemInput" placeholder="Yeni seçenek yaz..." maxlength="25">
+          <button class="btn" onclick="addNewItem()">Ekle</button>
+        </div>
+        <div class="items-tags" id="itemsContainer"></div>
+      </div>
+    </section>
+
+    <!-- 2. TAB: ZAR AT -->
+    <section class="tab-section" id="tab-dice">
+      <div class="dice-area">
+        <div class="dice" id="dice1">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="dice" id="dice2" style="display:none;">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap: 12px; margin-bottom: 10px;">
+        <button class="btn btn-secondary" onclick="toggleTwoDice(false)" id="btnDice1">1 Zar</button>
+        <button class="btn btn-secondary" onclick="toggleTwoDice(true)" id="btnDice2">2 Zar</button>
+      </div>
+
+      <button class="btn" style="height: 52px; font-size: 17px;" onclick="rollDice()">🎲 ZARLARI AT</button>
+    </section>
+
+    <!-- 3. TAB: YAZI TURA -->
+    <section class="tab-section" id="tab-coin">
+      <div class="coin-area">
+        <div class="coin" id="coin">YAZI</div>
+      </div>
+      <button class="btn" style="height: 52px; font-size: 17px;" onclick="flipCoin()">🪙 PARAYI FIRLAT</button>
+    </section>
+
+    <!-- 4. TAB: RASTGELE SAYI & KURA -->
+    <section class="tab-section" id="tab-random">
+      <div class="card">
+        <div class="card-title">RASTGELE SAYI ÜRETİCİ</div>
+        <div class="input-row">
+          <input type="number" id="minNum" value="1" placeholder="Min">
+          <input type="number" id="maxNum" value="100" placeholder="Max">
+        </div>
+        <div class="number-display" id="randomNumberResult">--</div>
+        <button class="btn" onclick="generateRandomNumber()">🔢 Sayı Seç</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">İSİM KURASI / KİM SEÇİLECEK?</div>
+        <textarea id="namesList" rows="3" placeholder="İsimleri virgülle veya alt alta yazın (Ahmet, Mehmet, Ayşe...)"></textarea>
+        <button class="btn" onclick="pickRandomName()">👤 Kura Çek</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('wheel', this)">
+      <span class="nav-icon">🎡</span>
+      <span>Çark</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('dice', this)">
+      <span class="nav-icon">🎲</span>
+      <span>Zar</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('coin', this)">
+      <span class="nav-icon">🪙</span>
+      <span>Yazı Tura</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('random', this)">
+      <span class="nav-icon">🔢</span>
+      <span>Sayı & Kura</span>
+    </button>
+  </nav>
+
+  <!-- RESULT POPUP MODAL -->
+  <div class="modal-overlay" id="resultModal">
+    <div class="modal-box">
+      <div class="modal-subtitle">Kader Kararını Verdi!</div>
+      <div class="modal-result" id="modalText">Pizza</div>
+      <button class="btn" style="width:100%" onclick="closeModal()">Harika!</button>
+    </div>
+  </div>
+
+  <!-- Story Görseli Üretimi İçin Canvas -->
+  <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+
+  <script>
+    // --- GÜNÜN ŞANS FALI & TAVSİYELERİ ---
+    const fortuneList = [
+      "Bugün o mesajı sen atma, arkana yaslan ve bekle. Top onların sahasında.",
+      "O diyete bugün değil, yarın başla. Kendine bir tatlı ödülü ver!",
+      "Aklındaki o çılgın fikri hayata geçirmenin tam sırası. Olmazsa 'şansa bıraktım' dersin.",
+      "Bugün mantığını bir kenara bırak; kalbinin ilk dediği seçenek doğru çıkacak.",
+      "Günün kuralı: 'Hemen geliyorum' diyen arkadaşına en az 40 dakika pay bırak.",
+      "Bugün karşına çıkacak ilk teklifi kabul etme, ikincisi çok daha lezzetli olacak.",
+      "Gereksiz harcamalardan uzak dur... Tabii kahve ve tatlı hariç!",
+      "Bugün şansın %90'ın üzerinde. Kararsız kaldığın ne varsa gözünü kapat ve seç.",
+      "Seni aramasını beklediğin kişi bugün aramayabilir ama daha güzel bir kapı açılacak.",
+      "Bugün kimseyle tartışmaya girme; 'he he' de ve günün tadını çıkar.",
+      "Kendini şımartma günü. Fazladan bir bölüm dizi izlemeyi hak ettin.",
+      "Bugün tesadüflere dikkat et; üçüncü kez duyduğun o şarkı sana bir şey fısıldıyor.",
+      "Kararsızlık zaman kaybıdır. Çarkı çevir, arkana yaslan!"
+    ];
+
+    const colorsList = ["Gece Mavisi", "Zümrüt Yeşili", "Alev Kırmızısı", "Güneş Sarısı", "Neon Pembe", "Mor"];
+
+    let currentFortune = {};
+
+    function initDailyFortune() {
+      const todayKey = new Date().toISOString().slice(0, 10);
+      const saved = localStorage.getItem('sansa_birak_daily');
+      
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.date === todayKey) {
+          currentFortune = parsed;
+          renderDailyCard();
+          return;
+        }
+      }
+      refreshDailyCard();
+    }
+
+    function refreshDailyCard() {
+      const quote = fortuneList[Math.floor(Math.random() * fortuneList.length)];
+      const num = Math.floor(Math.random() * 99) + 1;
+      const rate = Math.floor(Math.random() * 36) + 65; // %65 - %100 arası
+      const color = colorsList[Math.floor(Math.random() * colorsList.length)];
+      
+      currentFortune = {
+        date: new Date().toISOString().slice(0, 10),
+        quote,
+        num,
+        rate,
+        color
+      };
+
+      localStorage.setItem('sansa_birak_daily', JSON.stringify(currentFortune));
+      renderDailyCard();
+    }
+
+    function renderDailyCard() {
+      document.getElementById('dailyQuoteText').textContent = `"${currentFortune.quote}"`;
+      document.getElementById('dailyLuckyNumber').textContent = currentFortune.num;
+      document.getElementById('dailyLuckyRate').textContent = `%${currentFortune.rate}`;
+      document.getElementById('dailyLuckyColor').textContent = currentFortune.color;
+    }
+
+    // --- INSTAGRAM STORY GÖRSELİ OLUŞTURUCU (CANVAS) ---
+    async function shareToInstagramStory() {
+      vibrate(30);
+      const canvas = document.getElementById('storyCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // 1. 1080x1920 Gradient Arka Plan
+      const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
+      bgGrad.addColorStop(0, '#090d16');
+      bgGrad.addColorStop(0.4, '#1b1b3a');
+      bgGrad.addColorStop(1, '#090d16');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Parlama Efektleri (Neon Orblar)
+      const glowGrad = ctx.createRadialGradient(540, 600, 50, 540, 600, 500);
+      glowGrad.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
+      glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = glowGrad;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // 2. Üst Logo & Başlık
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 54px -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('✨ ŞANSA BIRAK', 540, 360);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '32px -apple-system, sans-serif';
+      ctx.fillText('GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
+
+      // 3. Ortadaki Şık Kart Kutusu
+      const cardX = 90;
+      const cardY = 520;
+      const cardW = 900;
+      const cardH = 920;
+
+      ctx.save();
+      ctx.fillStyle = 'rgba(19, 27, 46, 0.85)';
+      ctx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, 40);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      // Kart İçi Badge
+      ctx.fillStyle = '#ec4899';
+      ctx.font = 'bold 32px -apple-system, sans-serif';
+      ctx.fillText('🔮 KADERİN MESAJI', 540, 620);
+
+      // Metni Bölerek Satır Satır Yazdırma (Word Wrap)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 44px -apple-system, sans-serif';
+      wrapText(ctx, `"${currentFortune.quote}"`, 540, 740, 760, 64);
+
+      // 4. Alt Metrikler (Sayı, Oran, Renk)
+      const statY = 1140;
+      // Kutu 1: Uğurlu Sayı
+      drawStoryStat(ctx, 230, statY, 'UĞURLU SAYI', currentFortune.num.toString());
+      // Kutu 2: Şans Oranı
+      drawStoryStat(ctx, 540, statY, 'ŞANS ORANI', `%${currentFortune.rate}`);
+      // Kutu 3: Uğurlu Renk
+      drawStoryStat(ctx, 850, statY, 'GÜNÜN RENGİ', currentFortune.color);
+
+      // 5. Alt İmza & Call to Action
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '32px -apple-system, sans-serif';
+      ctx.fillText('Sen de çarkı çevir, kaderini gör 📲', 540, 1600);
+      ctx.fillStyle = '#6366f1';
+      ctx.font = 'bold 36px -apple-system, sans-serif';
+      ctx.fillText('#ŞansaBırak', 540, 1660);
+
+      // 6. Paylaşım Tetikleme (Web Share API ile Doğrudan Hikaye / İndirme)
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'sansa-birak-gunun-fali.png', { type: 'image/png' });
+        
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: 'Günün Şans Falı | Şansa Bırak',
+              text: 'Günün falı sende ne çıktı? Bakalım çark bugün kimden yana!'
+            });
+          } catch (e) {
+            fallbackDownload(blob);
+          }
+        } else {
+          fallbackDownload(blob);
+        }
+      }, 'image/png');
+    }
+
+    function drawStoryStat(ctx, x, y, label, val) {
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '24px -apple-system, sans-serif';
+      ctx.fillText(label, x, y);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 42px -apple-system, sans-serif';
+      ctx.fillText(val, x, y + 54);
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    function fallbackDownload(blob) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sansa-birak-story.png';
+      a.click();
+      alert("Story görselin galeriye kaydedildi! Instagram Hikayene ekleyebilirsin ✨");
+    }
+
+    // --- SES MOTORU (Web Audio API) ---
+    let soundEnabled = true;
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTone(freq, type = 'sine', duration = 0.05) {
+      if (!soundEnabled) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playWinSound() {
+      if (!soundEnabled) return;
+      [440, 554, 659, 880].forEach((freq, i) => {
+        setTimeout(() => playTone(freq, 'triangle', 0.25), i * 90);
+      });
+    }
+
+    function vibrate(ms = 20) {
+      if (navigator.vibrate) navigator.vibrate(ms);
+    }
+
+    document.getElementById('soundToggle').onclick = () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+    };
+
+    // --- TAB GEÇİŞLERİ ---
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      el.classList.add('active');
+      vibrate(10);
+    }
+
+    // --- ŞANS ÇARKI MANTIĞI ---
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+
+    const defaultItems = ['Pizza', 'Döner', 'Hamburger', 'Kebap', 'Evde Ye', 'Makarna'];
+    let items = JSON.parse(localStorage.getItem('sansa_birak_items')) || defaultItems;
+
+    const colors = [
+      '#6366f1', '#ec4899', '#f59e0b', '#10b981', 
+      '#06b6d4', '#8b5cf6', '#ef4444', '#14b8a6'
+    ];
+
+    let currentAngle = 0;
+    let isSpinning = false;
+
+    function drawWheel() {
+      const numSlices = items.length;
+      if (numSlices === 0) return;
+      const arc = (2 * Math.PI) / numSlices;
+      const radius = canvas.width / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < numSlices; i++) {
+        const sliceAngle = currentAngle + i * arc;
+
+        ctx.beginPath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.moveTo(radius, radius);
+        ctx.arc(radius, radius, radius - 10, sliceAngle, sliceAngle + arc);
+        ctx.lineTo(radius, radius);
+        ctx.fill();
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.save();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 28px sans-serif';
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 4;
+        ctx.translate(radius, radius);
+        ctx.rotate(sliceAngle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillText(items[i], radius - 40, 10);
+        ctx.restore();
+      }
+    }
+
+    function renderTags() {
+      const container = document.getElementById('itemsContainer');
+      const countEl = document.getElementById('itemCount');
+      container.innerHTML = '';
+      countEl.textContent = items.length;
+
+      items.forEach((item, idx) => {
+        const tag = document.createElement('div');
+        tag.className = 'item-tag';
+        tag.innerHTML = `<span>${item}</span><span class="item-tag-del" onclick="removeItem(${idx})">&times;</span>`;
+        container.appendChild(tag);
+      });
+      localStorage.setItem('sansa_birak_items', JSON.stringify(items));
+      drawWheel();
+    }
+
+    function addNewItem() {
+      const input = document.getElementById('newItemInput');
+      const val = input.value.trim();
+      if (val && items.length < 20) {
+        items.push(val);
+        input.value = '';
+        renderTags();
+      }
+    }
+
+    document.getElementById('newItemInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addNewItem();
+    });
+
+    function removeItem(index) {
+      if (items.length <= 2) {
+        alert("En az 2 seçenek olmalı!");
+        return;
+      }
+      items.splice(index, 1);
+      renderTags();
+    }
+
+    function clearAllItems() {
+      if (confirm("Tüm seçenekler silinsin mi?")) {
+        items = ['Evet', 'Hayır'];
+        renderTags();
+      }
+    }
+
+    const presets = {
+      food: ['Pizza', 'Döner', 'Hamburger', 'Kebap', 'Ev Yemeği', 'Makarna'],
+      activity: ['Sinema', 'Yürüyüş Yap', 'Kitap Oku', 'Kahve İç', 'Dinlen', 'Oyun Oyna'],
+      movie: ['Aksiyon', 'Komedi', 'Korku/Gerilim', 'Bilim Kurgu', 'Animasyon', 'Dram'],
+      game: ['Valorant', 'CS:GO', 'FIFA', 'Minecraft', 'GTA', 'Mobil Oyun']
+    };
+
+    function loadPreset(key) {
+      items = [...presets[key]];
+      renderTags();
+    }
+
+    spinBtn.onclick = () => {
+      if (isSpinning || items.length === 0) return;
+      isSpinning = true;
+
+      const spins = 5 + Math.random() * 5;
+      const extraAngle = Math.random() * 2 * Math.PI;
+      const totalRotation = spins * 2 * Math.PI + extraAngle;
+      const duration = 4000;
+      const startAngle = currentAngle;
+      const startTime = performance.now();
+      let lastSlicePassed = -1;
+
+      function animate(time) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        currentAngle = startAngle + totalRotation * ease;
+        drawWheel();
+
+        const arc = (2 * Math.PI) / items.length;
+        const normalized = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+        const currentSlice = Math.floor(normalized / arc);
+        if (currentSlice !== lastSlicePassed) {
+          playTone(600, 'sine', 0.02);
+          vibrate(12);
+          lastSlicePassed = currentSlice;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          isSpinning = false;
+          const actualAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+          const pointerAngle = (1.5 * Math.PI - actualAngle + 2 * Math.PI) % (2 * Math.PI);
+          const winnerIndex = Math.floor(pointerAngle / arc) % items.length;
+          showResult(items[winnerIndex]);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    };
+
+    // --- ZAR ---
+    let twoDiceMode = false;
+    const dicePatterns = {
+      1: [4],
+      2: [0, 8],
+      3: [0, 4, 8],
+      4: [0, 2, 6, 8],
+      5: [0, 2, 4, 6, 8],
+      6: [0, 2, 3, 5, 6, 8]
+    };
+
+    function setDiceDots(diceEl, value) {
+      const dots = diceEl.querySelectorAll('.dot');
+      dots.forEach((d, i) => {
+        d.style.visibility = dicePatterns[value].includes(i) ? 'visible' : 'hidden';
+      });
+    }
+
+    function toggleTwoDice(enabled) {
+      twoDiceMode = enabled;
+      document.getElementById('dice2').style.display = enabled ? 'grid' : 'none';
+      document.getElementById('btnDice1').style.borderColor = !enabled ? 'var(--accent)' : 'var(--card-border)';
+      document.getElementById('btnDice2').style.borderColor = enabled ? 'var(--accent)' : 'var(--card-border)';
+    }
+
+    function rollDice() {
+      const d1 = document.getElementById('dice1');
+      const d2 = document.getElementById('dice2');
+      d1.classList.add('rolling');
+      if (twoDiceMode) d2.classList.add('rolling');
+      vibrate(30);
+      playTone(300, 'square', 0.1);
+
+      setTimeout(() => {
+        d1.classList.remove('rolling');
+        if (twoDiceMode) d2.classList.remove('rolling');
+        const v1 = Math.floor(Math.random() * 6) + 1;
+        setDiceDots(d1, v1);
+        
+        if (twoDiceMode) {
+          const v2 = Math.floor(Math.random() * 6) + 1;
+          setDiceDots(d2, v2);
+          showResult(`${v1} + ${v2} = ${v1 + v2}`);
+        } else {
+          showResult(`Gelen Zar: ${v1}`);
+        }
+      }, 500);
+    }
+
+    // --- YAZI TURA ---
+    function flipCoin() {
+      const coin = document.getElementById('coin');
+      coin.classList.add('flipping');
+      vibrate(25);
+      playTone(800, 'sine', 0.05);
+
+      setTimeout(() => {
+        coin.classList.remove('flipping');
+        const result = Math.random() < 0.5 ? 'YAZI' : 'TURA';
+        coin.textContent = result;
+        showResult(result);
+      }, 700);
+    }
+
+    // --- RASTGELE SAYI & KURA ---
+    function generateRandomNumber() {
+      const min = parseInt(document.getElementById('minNum').value) || 1;
+      const max = parseInt(document.getElementById('maxNum').value) || 100;
+      if (min >= max) {
+        alert("Min sayı Max sayıdan küçük olmalı!");
+        return;
+      }
+      vibrate(20);
+      playTone(500, 'triangle', 0.05);
+      const res = Math.floor(Math.random() * (max - min + 1)) + min;
+      document.getElementById('randomNumberResult').textContent = res;
+    }
+
+    function pickRandomName() {
+      const raw = document.getElementById('namesList').value;
+      const list = raw.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
+      if (list.length < 2) {
+        alert("Lütfen en az 2 isim girin!");
+        return;
+      }
+      const chosen = list[Math.floor(Math.random() * list.length)];
+      showResult(`Seçilen: ${chosen}`);
+    }
+
+    function showResult(text) {
+      playWinSound();
+      vibrate(50);
+      document.getElementById('modalText').textContent = text;
+      document.getElementById('resultModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('resultModal').classList.remove('active');
+    }
+
+    document.getElementById('shareBtn').onclick = async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Şansa Bırak',
+            text: 'Ne yapacağına karar veremiyorsan işi şansa bırak!',
+            url: window.location.href,
+          });
+        } catch (e) {}
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Bağlantı kopyalandı!");
+      }
+    };
+
+    // Başlangıç kurulumu
+    initDailyFortune();
+    renderTags();
+    setDiceDots(document.getElementById('dice1'), 1);
+    setDiceDots(document.getElementById('dice2'), 6);
+  
+    // --- PWA SERVICE WORKER & YÜKLEME YÖNETİMİ ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker kayıt başarılı: ', reg.scope))
+          .catch((err) => console.log('Service Worker kayıt hatası: ', err));
+      });
+    }
+
+    let deferredPrompt = null;
+    const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (pwaInstallBtn) {
+        pwaInstallBtn.style.display = 'flex';
+      }
+    });
+
+    if (pwaInstallBtn) {
+      pwaInstallBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('Kullanıcı PWA kurulumunu kabul etti');
+          pwaInstallBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    window.addEventListener('appinstalled', () => {
+      if (pwaInstallBtn) pwaInstallBtn.style.display = 'none';
+      console.log('Uygulama başarıyla yüklendi!');
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "Şansa Bırak | Karar Verme & Günün Şansı",
+  "short_name": "ŞansaBırak",
+  "description": "Günün şans falı, tavsiyesi ve eğlenceli karar çarkı, zar ve yazı tura uygulaması.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

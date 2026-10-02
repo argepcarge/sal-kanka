@@ -723,22 +723,20 @@
       vibrate(30);
       const canvas = document.getElementById('storyCanvas');
       if (!canvas) return;
-      
-      // Tam ekran (1080x1920) yerine kompakt şık sticker / banner boyutu (1080x520)
+
       canvas.width = 1080;
-      canvas.height = 520;
+      canvas.height = 500;
       const ctx = canvas.getContext('2d');
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Banner Arka Planı (Köşeleri yuvarlak, derin neon koyu tema)
-      const bX = 40, bY = 30, bW = 1000, bH = 460, bR = 36;
+      // Banner Arka Planı (Şık neon kenarlı koyu kutu)
+      const bX = 40, bY = 20, bW = 1000, bH = 460, bR = 36;
       ctx.save();
-      
-      // Dış Gölge
+
       ctx.shadowColor = 'rgba(244, 63, 94, 0.45)';
-      ctx.shadowBlur = 40;
-      ctx.shadowOffsetY = 15;
+      ctx.shadowBlur = 35;
+      ctx.shadowOffsetY = 12;
 
       const grad = ctx.createLinearGradient(bX, bY, bX + bW, bY + bH);
       grad.addColorStop(0, '#1c081e');
@@ -761,38 +759,42 @@
       ctx.stroke();
       ctx.restore();
 
-      // Üst Minik Rozet
-      ctx.fillStyle = '#fda4af';
-      ctx.font = 'bold 24px -apple-system, sans-serif';
+      // Hizalamayı kesin olarak merkeze sabitle
       ctx.textAlign = 'center';
-      ctx.fillText('🛑 RESMİ BİLDİRİM • #ŞANSABIRAK', 540, 95);
+      ctx.textBaseline = 'middle';
 
-      // Ana Başlık: "BAŞARIYLA BOŞ VERİLDİ!"
+      // 1. En üstte: Sadece #ŞansaBırak
+      ctx.fillStyle = '#fda4af';
+      ctx.font = 'bold 26px -apple-system, sans-serif';
+      ctx.fillText('#ŞansaBırak', 540, 85);
+
+      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ!
       ctx.fillStyle = '#ffffff';
-      ctx.font = '900 56px -apple-system, sans-serif';
-      ctx.fillText('BAŞARIYLA BOŞ VERİLDİ! 🛋️', 540, 185);
+      ctx.font = '900 50px -apple-system, sans-serif';
+      ctx.fillText('BAŞARIYLA BOŞ VERİLDİ! 🛋️', 540, 165);
 
-      // Rastgele veya seçili mizahi detay
+      // 3. Ortadaki Absürt Cümle (Taşmayı önlemek için 820px genişlik limiti)
       ctx.fillStyle = '#fbcfe8';
-      ctx.font = '600 30px -apple-system, sans-serif';
-      const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 880);
+      ctx.font = '600 28px -apple-system, sans-serif';
+      const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 820);
       detLines.forEach((l, i) => {
-        ctx.fillText(l, 540, 255 + (i * 42));
+        ctx.fillText(l, 540, 245 + (i * 38));
       });
 
-      // Alt Sayaç & Mühür Bandı
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      // Kesikli Ayraç Çizgisi
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.lineWidth = 2;
       ctx.setLineDash([10, 8]);
       ctx.beginPath();
-      ctx.moveTo(100, 370);
-      ctx.lineTo(980, 370);
+      ctx.moveTo(120, 360);
+      ctx.lineTo(960, 360);
       ctx.stroke();
       ctx.setLineDash([]);
 
+      // 4. En altta: Sadece boşveriş sayısı ("5 kere boşverdi")
       ctx.fillStyle = '#34d399';
-      ctx.font = 'bold 26px -apple-system, sans-serif';
-      ctx.fillText(`✔️ Toplam ${totalBosverCount}. Boşveriş • Kasmaya Değmez`, 540, 425);
+      ctx.font = '900 32px -apple-system, sans-serif';
+      ctx.fillText(`${totalBosverCount} kere boşverdi ✨`, 540, 420);
 
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'bosverildi-banner.png', { type: 'image/png' });

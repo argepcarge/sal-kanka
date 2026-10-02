@@ -410,7 +410,7 @@
       <div class="brand-logo">🛑</div>
       <div class="brand-title-wrap">
         <div class="brand-title">Şansa Bırak</div>
-        <span class="version-badge app-version-text">v2.2.0</span>
+        <span class="version-badge app-version-text">v2.3.0</span>
       </div>
     </div>
     <div class="header-actions">
@@ -587,7 +587,7 @@
     </section>
 
     <div class="app-footer-info">
-      Şansa Bırak • <span class="app-version-text">v2.2.0</span>
+      Şansa Bırak • <span class="app-version-text">v2.3.0</span>
     </div>
   </main>
 
@@ -619,7 +619,7 @@
   <canvas id="storyCanvas" width="1080" height="1920"></canvas>
 
   <script>
-    const APP_VERSION = 'v2.2.0';
+    const APP_VERSION = 'v2.3.0';
     document.querySelectorAll('.app-version-text').forEach(el => el.textContent = APP_VERSION);
 
     // ==========================================
@@ -719,11 +719,34 @@
     // ==========================================
     // 📸 INSTAGRAM STORY: UFAK ABSÜRT "BOŞ VERİLDİ" BANNER'I
     // ==========================================
+    // ==========================================
+    // 📸 INSTAGRAM STORY: MOBİL VE PC'DE GARANTİLİ MERKEZİ BANNER
+    // ==========================================
+    function drawPerfectCenterText(ctx, text, y, font, color, maxW) {
+      ctx.save();
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'left'; // Mobil WebKit hizalama bug'ını tamamen engellemek için sol hizalama kullanılır
+      
+      const textWidth = ctx.measureText(text).width;
+      if (maxW && textWidth > maxW) {
+        // Genişlik sınırı aşıldığında
+        const startX = (1080 - maxW) / 2;
+        ctx.fillText(text, startX, y, maxW);
+      } else {
+        // Tam matematiksel merkez: (1080 - Genişlik) / 2
+        const startX = (1080 - textWidth) / 2;
+        ctx.fillText(text, startX, y);
+      }
+      ctx.restore();
+    }
+
     async function shareToInstagramStory() {
       vibrate(30);
-      const canvas = document.getElementById('storyCanvas');
-      if (!canvas) return;
 
+      // DOM'daki gizli canvas yerine bellekte sıfır, temiz bir canvas üret (Mobil CSS çakışmalarını önler)
+      const canvas = document.createElement('canvas');
       canvas.width = 1080;
       canvas.height = 480;
       const ctx = canvas.getContext('2d');
@@ -758,31 +781,36 @@
       ctx.stroke();
       ctx.restore();
 
-      // 1. En üstte: Sadece #ŞansaBırak (Tam Ortada)
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#fda4af';
-      ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('#ŞansaBırak', 540, 75, 850);
+      // 1. En üstte: Sadece #ŞansaBırak (Matematiksel Tam Merkez)
+      drawPerfectCenterText(
+        ctx, 
+        '#ŞansaBırak', 
+        75, 
+        'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+        '#fda4af', 
+        850
+      );
 
-      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ! (Punto 42px ve maxWidth 860px ile asla taşmaz)
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '900 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText('BAŞARIYLA BOŞ VERİLDİ! 🛋️', 540, 150, 860);
+      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ! (Mobilde asla sağa kaymaz)
+      drawPerfectCenterText(
+        ctx, 
+        'BAŞARIYLA BOŞ VERİLDİ! 🛋️', 
+        150, 
+        '900 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+        '#ffffff', 
+        860
+      );
 
-      // 3. Ortadaki Absürt Cümle
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#fbcfe8';
-      ctx.font = '600 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      // 3. Ortadaki Absürt Cümle (Satırlara Bölünmüş ve Ayrı Ayrı Milimetrik Ortalanmış)
+      const fontDetail = '600 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+      ctx.font = fontDetail;
       const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 820);
       detLines.forEach((l, i) => {
-        ctx.fillText(l, 540, 225 + (i * 36), 840);
+        drawPerfectCenterText(ctx, l, 225 + (i * 38), fontDetail, '#fbcfe8', 840);
       });
 
       // Kesikli Ayraç Çizgisi
+      ctx.save();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.lineWidth = 2;
       ctx.setLineDash([10, 8]);
@@ -790,14 +818,17 @@
       ctx.moveTo(120, 335);
       ctx.lineTo(960, 335);
       ctx.stroke();
-      ctx.setLineDash([]);
+      ctx.restore();
 
-      // 4. En altta: Sadece boşveriş sayısı ("5 kere boşverdi")
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = '#34d399';
-      ctx.font = '900 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      ctx.fillText(`${totalBosverCount} kere boşverdi ✨`, 540, 395, 850);
+      // 4. En altta: Sadece boşveriş sayısı ("X kere boşverdi ✨")
+      drawPerfectCenterText(
+        ctx, 
+        `${totalBosverCount} kere boşverdi ✨`, 
+        395, 
+        '900 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
+        '#34d399', 
+        850
+      );
 
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'bosverildi-banner.png', { type: 'image/png' });

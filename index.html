@@ -46,7 +46,7 @@
       padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* iOS Saat / Çentik Çakışmasını Engelleyen Güvenli Header */
+    /* iOS Saat / Çentik Çakışmasını Engelleyen Header */
     header {
       padding: 12px 18px;
       padding-top: calc(max(env(safe-area-inset-top, 0px), 44px) + 8px);
@@ -82,6 +82,12 @@
       box-shadow: 0 4px 14px var(--accent-glow);
     }
 
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .brand-title {
       font-size: 19px;
       font-weight: 800;
@@ -89,6 +95,18 @@
       background: linear-gradient(90deg, #fff, #cbd5e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    /* Header Versiyon Rozeti */
+    .version-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 2px 6px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
     }
 
     .header-actions {
@@ -577,6 +595,16 @@
       -webkit-text-fill-color: transparent;
     }
 
+    /* Sayfa Alt Bilgi Versiyon Alanı */
+    .app-footer-info {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.6;
+      padding: 6px 0 14px 0;
+      letter-spacing: 0.5px;
+    }
+
     nav.bottom-nav {
       position: fixed;
       bottom: 0;
@@ -630,7 +658,11 @@
   <header>
     <div class="brand">
       <div class="brand-logo">✨</div>
-      <div class="brand-title">Şansa Bırak</div>
+      <div class="brand-title-wrap">
+        <div class="brand-title">Şansa Bırak</div>
+        <!-- Üst Başlık Yanındaki Rozet -->
+        <span class="version-badge app-version-text">v1.0.0</span>
+      </div>
     </div>
     <div class="header-actions">
       <button class="icon-btn" id="pwaInstallBtn" title="Uygulamayı Yükle" style="display:none; color:#10b981; font-weight:bold;">📲</button>
@@ -746,6 +778,11 @@
         <button class="btn" onclick="pickRandomName()">👤 Kura Çek</button>
       </div>
     </section>
+
+    <!-- Sayfa Sonu Versiyon İmzası -->
+    <div class="app-footer-info">
+      Şansa Bırak • <span class="app-version-text">v1.0.0</span>
+    </div>
   </main>
 
   <!-- BOTTOM NAVIGATION -->
@@ -780,6 +817,16 @@
   <canvas id="storyCanvas" width="1080" height="1920"></canvas>
 
   <script>
+    // ==========================================
+    // ⚙️ UYGULAMA VERSİYONU (Burayı Güncelleyebilirsin)
+    // ==========================================
+    const APP_VERSION = 'v1.0.1';
+
+    // Versiyonu arayüzdeki ilgili tüm alanlara basar
+    document.querySelectorAll('.app-version-text').forEach(el => {
+      el.textContent = APP_VERSION;
+    });
+
     let fortuneList = [
       "Bugün o mesajı sen atma, arkana yaslan ve bekle. Top onların sahasında.",
       "O diyete bugün değil, yarın başla. Kendine bir tatlı ödülü ver!",

@@ -1,0 +1,14 @@
+[
+  {
+    "word": "KAHVE",
+    "forbidden": ["Çay", "Fincan", "Kafein", "Sıcak", "Starbucks"]
+  },
+  {
+    "word": "TELEFON",
+    "forbidden": ["Aramak", "Ekran", "Mesaj", "Akıllı", "Şarj"]
+  },
+  {
+    "word": "SİNEMA",
+    "forbidden": ["Film", "Mısır", "Bilet", "Salon", "Karanlık"]
+  }
+]

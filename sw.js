@@ -32,10 +32,11 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: HTML için NETWORK-FIRST stratejisi (İnternet varsa her zaman GitHub'dan son sürümü çek)
+// Fetch: HTML için NETWORK-FIRST stratejisi (İnternet varsa her zaman son sürümü çek)
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
+  // Sayfa istekleri (index.html ve ana sayfa)
   if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
     event.respondWith(
       fetch(req)
@@ -47,13 +48,14 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
+          // İnternet yoksa önbellekten aç
           return caches.match(req).then((cached) => cached || caches.match('./index.html'));
         })
     );
     return;
   }
 
-  // Statik dosyalar için Stale-While-Revalidate
+  // Diğer statik dosyalar (Görseller, Manifest) için Stale-While-Revalidate
   event.respondWith(
     caches.match(req).then((cached) => {
       const fetchPromise = fetch(req).then((networkResponse) => {

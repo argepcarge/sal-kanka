@@ -447,8 +447,8 @@
           </div>
         </div>
 
-        <button class="insta-share-btn" onclick="shareToInstagramStory()">
-          📸 Resmi Boşverme Belgeni Hikayende Paylaş
+                <button class="insta-share-btn" onclick="shareToInstagramStory()">
+          📤 Paylaş
         </button>
       </div>
 
@@ -727,15 +727,13 @@
       ctx.font = font;
       ctx.fillStyle = color;
       ctx.textBaseline = 'middle';
-      ctx.textAlign = 'left'; // Mobil WebKit hizalama bug'ını tamamen engellemek için sol hizalama kullanılır
+      ctx.textAlign = 'left';
       
       const textWidth = ctx.measureText(text).width;
       if (maxW && textWidth > maxW) {
-        // Genişlik sınırı aşıldığında
         const startX = (1080 - maxW) / 2;
         ctx.fillText(text, startX, y, maxW);
       } else {
-        // Tam matematiksel merkez: (1080 - Genişlik) / 2
         const startX = (1080 - textWidth) / 2;
         ctx.fillText(text, startX, y);
       }
@@ -745,89 +743,81 @@
     async function shareToInstagramStory() {
       vibrate(30);
 
-      // DOM'daki gizli canvas yerine bellekte sıfır, temiz bir canvas üret (Mobil CSS çakışmalarını önler)
+      // Tam banner boyutu: 1080 x 420
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
-      canvas.height = 480;
+      canvas.height = 420;
       const ctx = canvas.getContext('2d');
 
-      ctx.clearRect(0, 0, 1080, 480);
-
-      // Banner Arka Planı (Şık neon kenarlı koyu kutu)
-      const bX = 50, bY = 20, bW = 980, bH = 440, bR = 32;
-      ctx.save();
-      ctx.shadowColor = 'rgba(244, 63, 94, 0.45)';
-      ctx.shadowBlur = 35;
-      ctx.shadowOffsetY = 10;
-
-      const grad = ctx.createLinearGradient(bX, bY, bX + bW, bY + bH);
-      grad.addColorStop(0, '#1a061c');
-      grad.addColorStop(0.5, '#2c0a23');
-      grad.addColorStop(1, '#0d0417');
+      // 1. Arka planı tuvalin TAMAMINA (0,0,1080,420) yay — Dışarıda ASLA siyah boşluk kalmaz!
+      const grad = ctx.createLinearGradient(0, 0, 1080, 420);
+      grad.addColorStop(0, '#19061c');
+      grad.addColorStop(0.5, '#2e0a24');
+      grad.addColorStop(1, '#0e0419');
       ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1080, 420);
 
+      // 2. Şık İç Neon Çerçeve (Banner'ın içine oturtulmuş)
+      const bX = 16, bY = 16, bW = 1048, bH = 388, bR = 26;
+      ctx.save();
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 5;
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
         ctx.roundRect(bX, bY, bW, bH, bR);
       } else {
         ctx.rect(bX, bY, bW, bH);
       }
-      ctx.fill();
-
-      // Neon Çerçeve Çizgisi
-      ctx.shadowColor = 'transparent';
-      ctx.strokeStyle = '#f43f5e';
-      ctx.lineWidth = 5;
       ctx.stroke();
       ctx.restore();
 
-      // 1. En üstte: Sadece #ŞansaBırak (Matematiksel Tam Merkez)
+      // 3. En üstte: Sadece #ŞansaBırak (Tam Merkez)
       drawPerfectCenterText(
         ctx, 
         '#ŞansaBırak', 
-        75, 
+        68, 
         'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
         '#fda4af', 
-        850
+        900
       );
 
-      // 2. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ! (Mobilde asla sağa kaymaz)
+      // 4. Ana Başlık: BAŞARIYLA BOŞ VERİLDİ! (Punto 42px, tam merkez)
       drawPerfectCenterText(
         ctx, 
         'BAŞARIYLA BOŞ VERİLDİ! 🛋️', 
-        150, 
+        140, 
         '900 42px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
         '#ffffff', 
-        860
+        920
       );
 
-      // 3. Ortadaki Absürt Cümle (Satırlara Bölünmüş ve Ayrı Ayrı Milimetrik Ortalanmış)
+      // 5. Ortadaki Absürt Cümle
       const fontDetail = '600 26px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.font = fontDetail;
-      const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 820);
+      const detLines = getWrappedLines(ctx, currentBosverItem.detail || "Dünya dönmeye devam ediyor ama senin umrunda bile değil.", 880);
       detLines.forEach((l, i) => {
-        drawPerfectCenterText(ctx, l, 225 + (i * 38), fontDetail, '#fbcfe8', 840);
+        drawPerfectCenterText(ctx, l, 210 + (i * 36), fontDetail, '#fbcfe8', 900);
       });
 
-      // Kesikli Ayraç Çizgisi
+      // 6. Kesikli İnce Ayraç Çizgisi
       ctx.save();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.lineWidth = 2;
       ctx.setLineDash([10, 8]);
       ctx.beginPath();
-      ctx.moveTo(120, 335);
-      ctx.lineTo(960, 335);
+      ctx.moveTo(100, 310);
+      ctx.lineTo(980, 310);
       ctx.stroke();
       ctx.restore();
 
-      // 4. En altta: Sadece boşveriş sayısı ("X kere boşverdi ✨")
+      // 7. En altta: Sadece boşveriş sayısı ("X kere boşverdi ✨")
       drawPerfectCenterText(
         ctx, 
         `${totalBosverCount} kere boşverdi ✨`, 
-        395, 
+        360, 
         '900 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', 
         '#34d399', 
-        850
+        900
       );
 
       canvas.toBlob(async (blob) => {

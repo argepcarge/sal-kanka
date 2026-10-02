@@ -37,6 +37,11 @@
       user-select: none;
     }
 
+    input, textarea {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: radial-gradient(circle at top, #1e1e38 0%, var(--bg) 100%);
@@ -863,7 +868,7 @@
       <div class="brand-logo">✨</div>
       <div class="brand-title-wrap">
         <div class="brand-title">Şansa Bırak</div>
-        <span class="version-badge app-version-text">v1.2.0</span>
+        <span class="version-badge app-version-text">v1.2.1</span>
       </div>
     </div>
     <div class="header-actions">
@@ -874,11 +879,8 @@
   </header>
 
   <main>
-    <!-- ========================================== -->
     <!-- 1. ANA BÖLÜM: GÜNÜN ŞANSI (FAL + MİSTİK KÜRE) -->
-    <!-- ========================================== -->
     <section class="main-tab-view active" id="view-fortune">
-      <!-- Fal Kartı -->
       <div class="daily-card">
         <div class="daily-card-header">
           <div class="daily-card-badge">✨ Günün Şans Falı</div>
@@ -927,9 +929,7 @@
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- 2. ANA BÖLÜM: KARAR VER (ÇARK, ZAR, PARA..)-->
-    <!-- ========================================== -->
+    <!-- 2. ANA BÖLÜM: KARAR VER (ÇARK, ZAR, PARA..) -->
     <section class="main-tab-view" id="view-decide">
       <div class="sub-nav-row">
         <div class="sub-nav-pill active" onclick="switchSubTool('wheel', this)">🎡 Çark</div>
@@ -1017,9 +1017,7 @@
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- 3. ANA BÖLÜM: PARTİ & OYUN (TABU MODÜLÜ)   -->
-    <!-- ========================================== -->
+    <!-- 3. ANA BÖLÜM: PARTİ & OYUN (TABU MODÜLÜ) -->
     <section class="main-tab-view" id="view-party">
       <div class="tabu-header-bar">
         <div class="team-badge active" id="teamBadgeA" onclick="switchActiveTeam('A')">
@@ -1077,7 +1075,7 @@
     </section>
 
     <div class="app-footer-info">
-      Şansa Bırak • <span class="app-version-text">v1.2.0</span>
+      Şansa Bırak • <span class="app-version-text">v1.2.1</span>
     </div>
   </main>
 
@@ -1112,7 +1110,7 @@
     // ==========================================
     // ⚙️ UYGULAMA VERSİYONU
     // ==========================================
-    const APP_VERSION = 'v1.2.0';
+    const APP_VERSION = 'v1.2.1';
     document.querySelectorAll('.app-version-text').forEach(el => el.textContent = APP_VERSION);
 
     // ==========================================
@@ -1121,8 +1119,9 @@
     function switchMainTab(tabKey, el) {
       document.querySelectorAll('.main-tab-view').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      document.getElementById('view-' + tabKey).classList.add('active');
-      el.classList.add('active');
+      const targetView = document.getElementById('view-' + tabKey);
+      if (targetView) targetView.classList.add('active');
+      if (el) el.classList.add('active');
       vibrate(10);
       if (tabKey === 'decide') drawWheel();
     }
@@ -1130,8 +1129,9 @@
     function switchSubTool(toolKey, el) {
       document.querySelectorAll('.sub-tool-view').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.sub-nav-pill').forEach(p => p.classList.remove('active'));
-      document.getElementById('tool-' + toolKey).classList.add('active');
-      el.classList.add('active');
+      const targetTool = document.getElementById('tool-' + toolKey);
+      if (targetTool) targetTool.classList.add('active');
+      if (el) el.classList.add('active');
       vibrate(10);
       if (toolKey === 'wheel') drawWheel();
     }
@@ -1191,10 +1191,14 @@
     }
 
     function renderDailyCard() {
-      document.getElementById('dailyQuoteText').textContent = `"${currentFortune.quote}"`;
-      document.getElementById('dailyLuckyNumber').textContent = currentFortune.num;
-      document.getElementById('dailyLuckyRate').textContent = `%${currentFortune.rate}`;
-      document.getElementById('dailyLuckyColor').textContent = currentFortune.color;
+      const q = document.getElementById('dailyQuoteText');
+      const n = document.getElementById('dailyLuckyNumber');
+      const r = document.getElementById('dailyLuckyRate');
+      const c = document.getElementById('dailyLuckyColor');
+      if (q) q.textContent = `"${currentFortune.quote}"`;
+      if (n) n.textContent = currentFortune.num;
+      if (r) r.textContent = `%${currentFortune.rate}`;
+      if (c) c.textContent = currentFortune.color;
     }
 
     // ==========================================
@@ -1230,16 +1234,20 @@
       vibrate([30, 40, 30]);
       playMysticSound();
 
-      orb.classList.add('shaking');
-      text.style.opacity = '0';
-      text.style.transform = 'scale(0.8)';
+      if (orb) orb.classList.add('shaking');
+      if (text) {
+        text.style.opacity = '0';
+        text.style.transform = 'scale(0.8)';
+      }
 
       setTimeout(() => {
         const randomAnswer = mysticAnswers[Math.floor(Math.random() * mysticAnswers.length)];
-        text.textContent = randomAnswer;
-        text.style.opacity = '1';
-        text.style.transform = 'scale(1)';
-        orb.classList.remove('shaking');
+        if (text) {
+          text.textContent = randomAnswer;
+          text.style.opacity = '1';
+          text.style.transform = 'scale(1)';
+        }
+        if (orb) orb.classList.remove('shaking');
         isOrbThinking = false;
         vibrate(50);
       }, 650);
@@ -1259,6 +1267,7 @@
     async function shareToInstagramStory() {
       vibrate(30);
       const canvas = document.getElementById('storyCanvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
       const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
@@ -1404,15 +1413,18 @@
 
     function renderTabuCard() {
       const card = tabuCards[currentCardIndex % tabuCards.length];
-      document.getElementById('tabuWord').textContent = card.word;
+      const wordEl = document.getElementById('tabuWord');
       const listEl = document.getElementById('tabuForbiddenList');
-      listEl.innerHTML = '';
-      card.forbidden.forEach(word => {
-        const item = document.createElement('div');
-        item.className = 'tabu-forbidden-item';
-        item.textContent = word;
-        listEl.appendChild(item);
-      });
+      if (wordEl) wordEl.textContent = card.word;
+      if (listEl) {
+        listEl.innerHTML = '';
+        card.forbidden.forEach(word => {
+          const item = document.createElement('div');
+          item.className = 'tabu-forbidden-item';
+          item.textContent = word;
+          listEl.appendChild(item);
+        });
+      }
     }
 
     function nextTabuCard() {
@@ -1422,37 +1434,45 @@
 
     function switchActiveTeam(team) {
       activeTeam = team;
-      document.getElementById('teamBadgeA').classList.toggle('active', team === 'A');
-      document.getElementById('teamBadgeB').classList.toggle('active', team === 'B');
+      const bA = document.getElementById('teamBadgeA');
+      const bB = document.getElementById('teamBadgeB');
+      if (bA) bA.classList.toggle('active', team === 'A');
+      if (bB) bB.classList.toggle('active', team === 'B');
     }
 
     function toggleTabuGame() {
+      const btn = document.getElementById('tabuStartBtn');
       if (isTabuRunning) {
         clearInterval(tabuInterval);
         isTabuRunning = false;
-        document.getElementById('tabuStartBtn').textContent = '▶️ Devam Et';
+        if (btn) btn.textContent = '▶️ Devam Et';
       } else {
         isTabuRunning = true;
-        document.getElementById('tabuStartBtn').textContent = '⏸️ Duraklat';
+        if (btn) btn.textContent = '⏸️ Duraklat';
         tabuInterval = setInterval(() => {
           tabuTime--;
           const timerEl = document.getElementById('tabuTimerDisplay');
-          timerEl.textContent = tabuTime;
-          if (tabuTime <= 10) {
-            timerEl.classList.add('hurry');
-            playTone(400, 'triangle', 0.04);
+          if (timerEl) {
+            timerEl.textContent = tabuTime;
+            if (tabuTime <= 10) {
+              timerEl.classList.add('hurry');
+              playTone(400, 'triangle', 0.04);
+            }
           }
           if (tabuTime <= 0) {
             clearInterval(tabuInterval);
             isTabuRunning = false;
             playTone(150, 'sawtooth', 0.5);
-            alert(`Süre bitti! Sıra diğer takımda.`);
+            alert("Süre bitti! Sıra diğer takımda.");
             tabuTime = 60;
             passesLeft = 3;
-            document.getElementById('tabuPassLabel').textContent = `PAS (${passesLeft})`;
-            timerEl.textContent = tabuTime;
-            timerEl.classList.remove('hurry');
-            document.getElementById('tabuStartBtn').textContent = '▶️ Oyunu Başlat';
+            const pLbl = document.getElementById('tabuPassLabel');
+            if (pLbl) pLbl.textContent = `PAS (${passesLeft})`;
+            if (timerEl) {
+              timerEl.textContent = tabuTime;
+              timerEl.classList.remove('hurry');
+            }
+            if (btn) btn.textContent = '▶️ Oyunu Başlat';
             switchActiveTeam(activeTeam === 'A' ? 'B' : 'A');
           }
         }, 1000);
@@ -1479,12 +1499,15 @@
           return;
         }
         passesLeft--;
-        document.getElementById('tabuPassLabel').textContent = `PAS (${passesLeft})`;
+        const pLbl = document.getElementById('tabuPassLabel');
+        if (pLbl) pLbl.textContent = `PAS (${passesLeft})`;
         playTone(450, 'sine', 0.05);
       }
 
-      document.getElementById('scoreTeamA').textContent = teamScores.A;
-      document.getElementById('scoreTeamB').textContent = teamScores.B;
+      const sA = document.getElementById('scoreTeamA');
+      const sB = document.getElementById('scoreTeamB');
+      if (sA) sA.textContent = teamScores.A;
+      if (sB) sB.textContent = teamScores.B;
       nextTabuCard();
     }
 
@@ -1494,12 +1517,19 @@
       tabuTime = 60;
       passesLeft = 3;
       teamScores = { A: 0, B: 0 };
-      document.getElementById('scoreTeamA').textContent = '0';
-      document.getElementById('scoreTeamB').textContent = '0';
-      document.getElementById('tabuTimerDisplay').textContent = '60';
-      document.getElementById('tabuTimerDisplay').classList.remove('hurry');
-      document.getElementById('tabuPassLabel').textContent = 'PAS (3)';
-      document.getElementById('tabuStartBtn').textContent = '▶️ Oyunu Başlat';
+      const sA = document.getElementById('scoreTeamA');
+      const sB = document.getElementById('scoreTeamB');
+      const tDisp = document.getElementById('tabuTimerDisplay');
+      const pLbl = document.getElementById('tabuPassLabel');
+      const btn = document.getElementById('tabuStartBtn');
+      if (sA) sA.textContent = '0';
+      if (sB) sB.textContent = '0';
+      if (tDisp) {
+        tDisp.textContent = '60';
+        tDisp.classList.remove('hurry');
+      }
+      if (pLbl) pLbl.textContent = 'PAS (3)';
+      if (btn) btn.textContent = '▶️ Oyunu Başlat';
       switchActiveTeam('A');
       nextTabuCard();
     }
@@ -1536,21 +1566,26 @@
 
     function vibrate(ms = 20) {
       if (navigator.vibrate) {
-        if (Array.isArray(ms)) navigator.vibrate(ms);
-        else navigator.vibrate(ms);
+        try {
+          if (Array.isArray(ms)) navigator.vibrate(ms);
+          else navigator.vibrate(ms);
+        } catch (e) {}
       }
     }
 
-    document.getElementById('soundToggle').onclick = () => {
-      soundEnabled = !soundEnabled;
-      document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
-    };
+    const sToggle = document.getElementById('soundToggle');
+    if (sToggle) {
+      sToggle.onclick = () => {
+        soundEnabled = !soundEnabled;
+        sToggle.textContent = soundEnabled ? '🔊' : '🔇';
+      };
+    }
 
     // ==========================================
     // 🎡 ÇARK MANTIĞI
     // ==========================================
     const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
     const spinBtn = document.getElementById('spinBtn');
 
     const defaultItems = ['Pizza', 'Döner', 'Hamburger', 'Kebap', 'Evde Ye', 'Makarna'];
@@ -1561,6 +1596,7 @@
     let isSpinning = false;
 
     function drawWheel() {
+      if (!ctx || !canvas) return;
       const numSlices = items.length;
       if (numSlices === 0) return;
       const arc = (2 * Math.PI) / numSlices;
@@ -1596,6 +1632,7 @@
     function renderTags() {
       const container = document.getElementById('itemsContainer');
       const countEl = document.getElementById('itemCount');
+      if (!container || !countEl) return;
       container.innerHTML = '';
       countEl.textContent = items.length;
 
@@ -1611,6 +1648,7 @@
 
     function addNewItem() {
       const input = document.getElementById('newItemInput');
+      if (!input) return;
       const val = input.value.trim();
       if (val && items.length < 20) {
         items.push(val);
@@ -1619,9 +1657,12 @@
       }
     }
 
-    document.getElementById('newItemInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') addNewItem();
-    });
+    const nItemInput = document.getElementById('newItemInput');
+    if (nItemInput) {
+      nItemInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addNewItem();
+      });
+    }
 
     function removeItem(index) {
       if (items.length <= 2) {
@@ -1651,46 +1692,48 @@
       renderTags();
     }
 
-    spinBtn.onclick = () => {
-      if (isSpinning || items.length === 0) return;
-      isSpinning = true;
+    if (spinBtn) {
+      spinBtn.onclick = () => {
+        if (isSpinning || items.length === 0) return;
+        isSpinning = true;
 
-      const spins = 5 + Math.random() * 5;
-      const extraAngle = Math.random() * 2 * Math.PI;
-      const totalRotation = spins * 2 * Math.PI + extraAngle;
-      const duration = 4000;
-      const startAngle = currentAngle;
-      const startTime = performance.now();
-      let lastSlicePassed = -1;
+        const spins = 5 + Math.random() * 5;
+        const extraAngle = Math.random() * 2 * Math.PI;
+        const totalRotation = spins * 2 * Math.PI + extraAngle;
+        const duration = 4000;
+        const startAngle = currentAngle;
+        const startTime = performance.now();
+        let lastSlicePassed = -1;
 
-      function animate(time) {
-        const elapsed = time - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const ease = 1 - Math.pow(1 - progress, 3);
-        currentAngle = startAngle + totalRotation * ease;
-        drawWheel();
+        function animate(time) {
+          const elapsed = time - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          currentAngle = startAngle + totalRotation * ease;
+          drawWheel();
 
-        const arc = (2 * Math.PI) / items.length;
-        const normalized = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-        const currentSlice = Math.floor(normalized / arc);
-        if (currentSlice !== lastSlicePassed) {
-          playTone(600, 'sine', 0.02);
-          vibrate(12);
-          lastSlicePassed = currentSlice;
+          const arc = (2 * Math.PI) / items.length;
+          const normalized = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+          const currentSlice = Math.floor(normalized / arc);
+          if (currentSlice !== lastSlicePassed) {
+            playTone(600, 'sine', 0.02);
+            vibrate(12);
+            lastSlicePassed = currentSlice;
+          }
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            isSpinning = false;
+            const actualAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+            const pointerAngle = (1.5 * Math.PI - actualAngle + 2 * Math.PI) % (2 * Math.PI);
+            const winnerIndex = Math.floor(pointerAngle / arc) % items.length;
+            showResult(items[winnerIndex]);
+          }
         }
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          isSpinning = false;
-          const actualAngle = (currentAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-          const pointerAngle = (1.5 * Math.PI - actualAngle + 2 * Math.PI) % (2 * Math.PI);
-          const winnerIndex = Math.floor(pointerAngle / arc) % items.length;
-          showResult(items[winnerIndex]);
-        }
-      }
-      requestAnimationFrame(animate);
-    };
+        requestAnimationFrame(animate);
+      };
+    }
 
     // ==========================================
     // 🎲 ZAR & 🪙 YAZI TURA & SAYI
@@ -1702,6 +1745,7 @@
     };
 
     function setDiceDots(diceEl, value) {
+      if (!diceEl) return;
       diceEl.querySelectorAll('.dot').forEach((d, i) => {
         d.style.visibility = dicePatterns[value].includes(i) ? 'visible' : 'hidden';
       });
@@ -1709,22 +1753,25 @@
 
     function toggleTwoDice(enabled) {
       twoDiceMode = enabled;
-      document.getElementById('dice2').style.display = enabled ? 'grid' : 'none';
-      document.getElementById('btnDice1').style.borderColor = !enabled ? 'var(--accent)' : 'var(--card-border)';
-      document.getElementById('btnDice2').style.borderColor = enabled ? 'var(--accent)' : 'var(--card-border)';
+      const d2 = document.getElementById('dice2');
+      const b1 = document.getElementById('btnDice1');
+      const b2 = document.getElementById('btnDice2');
+      if (d2) d2.style.display = enabled ? 'grid' : 'none';
+      if (b1) b1.style.borderColor = !enabled ? 'var(--accent)' : 'var(--card-border)';
+      if (b2) b2.style.borderColor = enabled ? 'var(--accent)' : 'var(--card-border)';
     }
 
     function rollDice() {
       const d1 = document.getElementById('dice1');
       const d2 = document.getElementById('dice2');
-      d1.classList.add('rolling');
-      if (twoDiceMode) d2.classList.add('rolling');
+      if (d1) d1.classList.add('rolling');
+      if (twoDiceMode && d2) d2.classList.add('rolling');
       vibrate(30);
       playTone(300, 'square', 0.1);
 
       setTimeout(() => {
-        d1.classList.remove('rolling');
-        if (twoDiceMode) d2.classList.remove('rolling');
+        if (d1) d1.classList.remove('rolling');
+        if (twoDiceMode && d2) d2.classList.remove('rolling');
         const v1 = Math.floor(Math.random() * 6) + 1;
         setDiceDots(d1, v1);
         if (twoDiceMode) {
@@ -1739,34 +1786,40 @@
 
     function flipCoin() {
       const coin = document.getElementById('coin');
-      coin.classList.add('flipping');
+      if (coin) coin.classList.add('flipping');
       vibrate(25);
       playTone(800, 'sine', 0.05);
 
       setTimeout(() => {
-        coin.classList.remove('flipping');
-        const result = Math.random() < 0.5 ? 'YAZI' : 'TURA';
-        coin.textContent = result;
-        showResult(result);
+        if (coin) {
+          coin.classList.remove('flipping');
+          const result = Math.random() < 0.5 ? 'YAZI' : 'TURA';
+          coin.textContent = result;
+          showResult(result);
+        }
       }, 700);
     }
 
     function generateRandomNumber() {
-      const min = parseInt(document.getElementById('minNum').value) || 1;
-      const max = parseInt(document.getElementById('maxNum').value) || 100;
+      const minInput = document.getElementById('minNum');
+      const maxInput = document.getElementById('maxNum');
+      const min = parseInt(minInput ? minInput.value : 1) || 1;
+      const max = parseInt(maxInput ? maxInput.value : 100) || 100;
       if (min >= max) {
         alert("Min sayı Max sayıdan küçük olmalı!");
         return;
       }
       vibrate(20);
       playTone(500, 'triangle', 0.05);
-      document.getElementById('randomNumberResult').textContent = Math.floor(Math.random() * (max - min + 1)) + min;
+      const resEl = document.getElementById('randomNumberResult');
+      if (resEl) resEl.textContent = Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
     function pickRandomName() {
-      const raw = document.getElementById('namesList').value;
-      const list = raw.split(/[
-,]+/).map(s => s.trim()).filter(s => s.length > 0);
+      const inputEl = document.getElementById('namesList');
+      if (!inputEl) return;
+      const raw = inputEl.value;
+      const list = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
       if (list.length < 2) {
         alert("Lütfen en az 2 isim girin!");
         return;
@@ -1777,28 +1830,34 @@
     function showResult(text) {
       playWinSound();
       vibrate(50);
-      document.getElementById('modalText').textContent = text;
-      document.getElementById('resultModal').classList.add('active');
+      const mText = document.getElementById('modalText');
+      const mOverlay = document.getElementById('resultModal');
+      if (mText) mText.textContent = text;
+      if (mOverlay) mOverlay.classList.add('active');
     }
 
     function closeModal() {
-      document.getElementById('resultModal').classList.remove('active');
+      const mOverlay = document.getElementById('resultModal');
+      if (mOverlay) mOverlay.classList.remove('active');
     }
 
-    document.getElementById('shareBtn').onclick = async () => {
-      if (navigator.share) {
-        try {
-          await navigator.share({
-            title: 'Şansa Bırak',
-            text: 'Ne yapacağına karar veremiyorsan işi şansa bırak!',
-            url: window.location.href,
-          });
-        } catch (e) {}
-      } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert("Bağlantı kopyalandı!");
-      }
-    };
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+      shareBtn.onclick = async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: 'Şansa Bırak',
+              text: 'Ne yapacağına karar veremiyorsan işi şansa bırak!',
+              url: window.location.href,
+            });
+          } catch (e) {}
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          alert("Bağlantı kopyalandı!");
+        }
+      };
+    }
 
     // ==========================================
     // 🚀 BAŞLANGIÇ

@@ -46,18 +46,18 @@
       padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
     }
 
-    /* iOS Durum Çubuğu / Çentik Alanı Düzeltildi */
+    /* iOS Saat / Çentik Çakışmasını Engelleyen Güvenli Header */
     header {
-      padding: 14px 18px;
-      padding-top: calc(14px + env(safe-area-inset-top, 0px));
-      padding-left: calc(18px + env(safe-area-inset-left, 0px));
-      padding-right: calc(18px + env(safe-area-inset-right, 0px));
+      padding: 12px 18px;
+      padding-top: calc(max(env(safe-area-inset-top, 0px), 44px) + 8px);
+      padding-left: calc(max(env(safe-area-inset-left, 0px), 16px));
+      padding-right: calc(max(env(safe-area-inset-right, 0px), 16px));
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       position: sticky;
       top: 0;
       z-index: 50;
@@ -361,7 +361,6 @@
       width: 100%;
     }
 
-    /* iOS Otomatik Yakınlaştırma (Zoom) Önleyici Font Boyutu (16px) */
     input[type="text"], input[type="number"], textarea {
       flex: 1 1 0%;
       min-width: 0;
@@ -627,7 +626,7 @@
 </head>
 <body>
 
-  <!-- HEADER (Çentik Payı Verildi) -->
+  <!-- HEADER -->
   <header>
     <div class="brand">
       <div class="brand-logo">✨</div>
@@ -641,7 +640,6 @@
   </header>
 
   <main>
-    <!-- GÜNÜN ŞANS & FAL KARTI -->
     <div class="daily-card">
       <div class="daily-card-header">
         <div class="daily-card-badge">✨ Günün Şans Falı</div>
@@ -667,7 +665,6 @@
       </button>
     </div>
 
-    <!-- REKLAM BANNER ALANI -->
     <div class="ad-slot">
       <span>📢 Sponsorlu Reklam Alanı (Google AdSense / Banner)</span>
     </div>
@@ -780,11 +777,9 @@
     </div>
   </div>
 
-  <!-- Story Görseli Üretimi İçin Canvas -->
   <canvas id="storyCanvas" width="1080" height="1920"></canvas>
 
   <script>
-    // --- GÜNÜN ŞANS FALI (JSON + FALLBACK HAVUZU) ---
     let fortuneList = [
       "Bugün o mesajı sen atma, arkana yaslan ve bekle. Top onların sahasında.",
       "O diyete bugün değil, yarın başla. Kendine bir tatlı ödülü ver!",
@@ -801,7 +796,6 @@
       "Kararsızlık zaman kaybıdır. Çarkı çevir, arkana yaslan!"
     ];
 
-    // sozler.json dosyasından asenkron olarak yükleme
     async function loadFortuneData() {
       try {
         const response = await fetch('./sozler.json');
@@ -840,7 +834,7 @@
     function refreshDailyCard() {
       const quote = fortuneList[Math.floor(Math.random() * fortuneList.length)];
       const num = Math.floor(Math.random() * 99) + 1;
-      const rate = Math.floor(Math.random() * 36) + 65; // %65 - %100 arası
+      const rate = Math.floor(Math.random() * 36) + 65;
       const color = colorsList[Math.floor(Math.random() * colorsList.length)];
       
       currentFortune = {
@@ -862,13 +856,11 @@
       document.getElementById('dailyLuckyColor').textContent = currentFortune.color;
     }
 
-    // --- INSTAGRAM STORY GÖRSELİ OLUŞTURUCU ---
     async function shareToInstagramStory() {
       vibrate(30);
       const canvas = document.getElementById('storyCanvas');
       const ctx = canvas.getContext('2d');
 
-      // 1. Arka Plan
       const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
       bgGrad.addColorStop(0, '#090d16');
       bgGrad.addColorStop(0.4, '#1b1b3a');
@@ -876,14 +868,12 @@
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, 1080, 1920);
 
-      // Parlama Efektleri
       const glowGrad = ctx.createRadialGradient(540, 600, 50, 540, 600, 500);
       glowGrad.addColorStop(0, 'rgba(236, 72, 153, 0.25)');
       glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, 1080, 1920);
 
-      // 2. Logo & Başlık
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 54px -apple-system, sans-serif';
       ctx.textAlign = 'center';
@@ -893,7 +883,6 @@
       ctx.font = '32px -apple-system, sans-serif';
       ctx.fillText('GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
 
-      // 3. Kart Kutusu (Geniş Tarayıcı Desteği İçin Fallback'li)
       const cardX = 90;
       const cardY = 520;
       const cardW = 900;
@@ -931,13 +920,11 @@
       ctx.font = 'bold 44px -apple-system, sans-serif';
       wrapText(ctx, `"${currentFortune.quote}"`, 540, 740, 760, 64);
 
-      // 4. Alt Metrikler
       const statY = 1140;
       drawStoryStat(ctx, 230, statY, 'UĞURLU SAYI', currentFortune.num.toString());
       drawStoryStat(ctx, 540, statY, 'ŞANS ORANI', `%${currentFortune.rate}`);
       drawStoryStat(ctx, 850, statY, 'GÜNÜN RENGİ', currentFortune.color);
 
-      // 5. Alt İmza
       ctx.fillStyle = '#cbd5e1';
       ctx.font = '32px -apple-system, sans-serif';
       ctx.fillText('Sen de çarkı çevir, kaderini gör 📲', 540, 1600);
@@ -945,7 +932,6 @@
       ctx.font = 'bold 36px -apple-system, sans-serif';
       ctx.fillText('#ŞansaBırak', 540, 1660);
 
-      // Paylaşım Tetikleme
       canvas.toBlob(async (blob) => {
         const file = new File([blob], 'sansa-birak-gunun-fali.png', { type: 'image/png' });
         
@@ -1000,7 +986,6 @@
       alert("Story görselin galeriye kaydedildi! Instagram Hikayene ekleyebilirsin ✨");
     }
 
-    // --- SES MOTORU (Web Audio API) ---
     let soundEnabled = true;
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -1037,7 +1022,6 @@
       document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
     };
 
-    // --- TAB GEÇİŞLERİ ---
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
@@ -1046,7 +1030,6 @@
       vibrate(10);
     }
 
-    // --- ŞANS ÇARKI MANTIĞI ---
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     const spinBtn = document.getElementById('spinBtn');
@@ -1197,7 +1180,6 @@
       requestAnimationFrame(animate);
     };
 
-    // --- ZAR ---
     let twoDiceMode = false;
     const dicePatterns = {
       1: [4],
@@ -1246,7 +1228,6 @@
       }, 500);
     }
 
-    // --- YAZI TURA ---
     function flipCoin() {
       const coin = document.getElementById('coin');
       coin.classList.add('flipping');
@@ -1261,7 +1242,6 @@
       }, 700);
     }
 
-    // --- RASTGELE SAYI & KURA ---
     function generateRandomNumber() {
       const min = parseInt(document.getElementById('minNum').value) || 1;
       const max = parseInt(document.getElementById('maxNum').value) || 100;
@@ -1312,13 +1292,11 @@
       }
     };
 
-    // Başlangıç kurulumu
     initDailyFortune();
     renderTags();
     setDiceDots(document.getElementById('dice1'), 1);
     setDiceDots(document.getElementById('dice2'), 6);
   
-    // --- PWA SERVICE WORKER ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', async () => {
         try {

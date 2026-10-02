@@ -165,80 +165,36 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* GÜNÜN KARTI (FAL / BİLGELİK GEÇİŞLİ) */
+    /* GÜNÜN BİLGELİĞİ KARTI */
     .daily-card {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(236, 72, 153, 0.14));
-      border: 1px solid rgba(236, 72, 153, 0.35);
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(99, 102, 241, 0.16));
+      border: 1px solid rgba(6, 182, 212, 0.35);
       border-radius: 22px;
-      padding: 18px;
+      padding: 22px 18px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      transition: border-color 0.3s;
-    }
-
-    .daily-card.wisdom-theme {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(99, 102, 241, 0.15));
-      border-color: rgba(6, 182, 212, 0.35);
-    }
-
-    /* Mod Seçici Hap Butonlar */
-    .daily-mode-switch {
-      display: flex;
-      background: rgba(11, 18, 32, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 3px;
-      gap: 4px;
-      margin-bottom: 14px;
-    }
-
-    .mode-tab-btn {
-      flex: 1;
-      padding: 7px 10px;
-      border-radius: 11px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: all 0.2s;
-    }
-
-    .mode-tab-btn.active {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: #fff;
-      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
     }
 
     .daily-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .daily-card-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      background: linear-gradient(90deg, #ec4899, #8b5cf6);
+      background: linear-gradient(90deg, #06b6d4, #6366f1);
       color: #fff;
       font-size: 11px;
       font-weight: 800;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-    }
-
-    .daily-card-badge.wisdom-badge {
-      background: linear-gradient(90deg, #06b6d4, #6366f1);
     }
 
     .daily-card-refresh {
@@ -248,40 +204,29 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      transition: opacity 0.2s;
     }
+    .daily-card-refresh:active { opacity: 0.7; }
 
     .daily-quote {
       font-size: 16px;
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.55;
       color: #f8fafc;
-      margin-bottom: 12px;
-      min-height: 48px;
+      margin-bottom: 10px;
+      min-height: 52px;
+      text-align: center;
     }
 
     .daily-author-sign {
-      display: none;
-      text-align: right;
-      font-size: 13px;
+      display: block;
+      text-align: center;
+      font-size: 14px;
       font-weight: 700;
       color: #38bdf8;
       font-style: italic;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
     }
-
-    .daily-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.5);
-      border-radius: 14px;
-      padding: 10px;
-      margin-bottom: 14px;
-    }
-
-    .metric-box { text-align: center; }
-    .metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
-    .metric-value { font-size: 15px; font-weight: 800; color: #fff; margin-top: 3px; }
 
     .insta-share-btn {
       width: 100%;
@@ -1050,23 +995,13 @@
 
   <main>
     <!-- ========================================== -->
-    <!-- 1. ANA BÖLÜM: GÜNÜN ŞANSI (FAL + MİSTİK KÜRE) -->
+    <!-- 1. ANA BÖLÜM: GÜNÜN BİLGELİĞİ & KARAR KÜRESİ -->
     <!-- ========================================== -->
     <section class="main-tab-view active" id="view-fortune">
-      <!-- Günün Kartı (Fal / Bilgelik Geçişli) -->
+      <!-- Günün Bilgeliği Kartı -->
       <div class="daily-card" id="dailyCardElement">
-        <!-- Mod Değiştirici Butonlar -->
-        <div class="daily-mode-switch">
-          <button class="mode-tab-btn active" id="btnModeFal" onclick="switchDailyMode('fal')">
-            <span>✨</span> Günün Falı
-          </button>
-          <button class="mode-tab-btn" id="btnModeWisdom" onclick="switchDailyMode('wisdom')">
-            <span>🏛️</span> Günün Bilgeliği
-          </button>
-        </div>
-
         <div class="daily-card-header">
-          <div class="daily-card-badge" id="dailyCardBadge">✨ Günün Falı</div>
+          <div class="daily-card-badge" id="dailyCardBadge">🏛️ Günün Bilgeliği</div>
           <div class="daily-card-refresh" onclick="refreshDailyCard()">
             <span>🎲</span> Yenile
           </div>
@@ -1074,22 +1009,6 @@
 
         <div class="daily-quote" id="dailyQuoteText">"Yükleniyor..."</div>
         <div class="daily-author-sign" id="dailyAuthorSign"></div>
-
-        <!-- Fal Modunda Görünen Metrikler -->
-        <div class="daily-metrics" id="dailyMetricsGroup">
-          <div class="metric-box">
-            <div class="metric-label">Uğurlu Sayı</div>
-            <div class="metric-value" id="dailyLuckyNumber">7</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-label">Şans Oranı</div>
-            <div class="metric-value" id="dailyLuckyRate">%88</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-label">Günün Rengi</div>
-            <div class="metric-value" id="dailyLuckyColor">Mavi</div>
-          </div>
-        </div>
 
         <button class="insta-share-btn" onclick="shareToInstagramStory()">
           📸 Hikayende Paylaş (Story Yap)
@@ -1339,8 +1258,8 @@
   <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchMainTab('fortune', this)">
-      <span class="nav-icon">🔮</span>
-      <span>Günün Şansı</span>
+      <span class="nav-icon">🏛️</span>
+      <span>Günün Bilgeliği</span>
     </button>
     <button class="nav-item" onclick="switchMainTab('decide', this)">
       <span class="nav-icon">🎯</span>
@@ -1403,24 +1322,8 @@
     }
 
     // ==========================================
-    // 🔮 GÜNÜN KARTI (FAL & BİLGELİK) MANTIĞI
+    // 🏛️ GÜNÜN BİLGELİĞİ MANTIĞI
     // ==========================================
-    let currentDailyMode = 'fal'; // 'fal' veya 'wisdom'
-
-    // Fal Veri Havuzu (fal.json yedeği)
-    let falList = [
-      "Bugün o mesajı ilk atan sen olma; arkana yaslan, top onların sahasında kalsın. 📱",
-      "'5 dakikaya oradayım' diyen arkadaşına en az yarım saat pay bırak, kahven soğumasın. ⏰",
-      "Bugün kimseyle laf yarışına girme; 'he he' de ve günün tadını çıkar. 🧘",
-      "Seni aramasını beklediğin kişi bugün aramayabilir ama çok daha neşeli bir haber kapıda. ✨",
-      "Bugün enerjini seni yoranlara değil, yüzünü güldüren insanlara sakla. 🌻",
-      "O diyete bugün değil yarın başla; bugün kendine sevdiğin bir tatlı ödülü ver! 🍰",
-      "Gereksiz harcamalardan uzak dur... Tabii konu nefis bir kahve veya tatlı değilse! ☕",
-      "Bugün dinlenme günü ilan edildi; fazladan bir bölüm dizi izlemeyi hak ettin. 🎬",
-      "Bugün içine ilk doğan hisse güven; ilk aklına gelen seçenek doğru çıkacak. 🧭",
-      "Evden çıkmadan önce şarjını ve anahtarlarını iki kez kontrol et, günün aksamasın! 🔑"
-    ];
-
     // Bilgelik Veri Havuzu (sozler.json yedeği)
     let wisdomList = [
       { quote: "Hayal gücü bilgiden daha önemlidir. Bilgi sınırlıdır, hayal gücü ise dünyayı kuşatır.", author: "Albert Einstein" },
@@ -1431,17 +1334,12 @@
       { quote: "Tabiatın kitabını okumak istiyorsan, onun yazıldığı dili, yani matematiği öğrenmelisin.", author: "Galileo Galilei" }
     ];
 
-    async function loadJsonFiles() {
-      // fal.json yükle
-      try {
-        const resFal = await fetch('./fal.json');
-        if (resFal.ok) {
-          const dataFal = await resFal.json();
-          if (Array.isArray(dataFal) && dataFal.length > 0) falList = dataFal;
-        }
-      } catch (e) {}
+    let currentDailyData = {
+      quote: "",
+      author: ""
+    };
 
-      // sozler.json yükle
+    async function loadJsonFiles() {
       try {
         const resSozler = await fetch('./sozler.json');
         if (resSozler.ok) {
@@ -1451,22 +1349,16 @@
       } catch (e) {}
     }
 
-    const colorsList = ["Gece Mavisi", "Zümrüt Yeşili", "Alev Kırmızısı", "Güneş Sarısı", "Neon Pembe", "Mor"];
-    let currentDailyData = {
-      fal: {},
-      wisdom: {}
-    };
-
     async function initDailyCard() {
       await loadJsonFiles();
       const todayKey = new Date().toISOString().slice(0, 10);
-      const saved = localStorage.getItem('sansa_birak_daily_store');
+      const saved = localStorage.getItem('sansa_birak_wisdom_store');
       let needsRefresh = true;
 
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (parsed.date === todayKey) {
+          if (parsed.date === todayKey && parsed.data && parsed.data.quote) {
             currentDailyData = parsed.data;
             needsRefresh = false;
           }
@@ -1477,63 +1369,23 @@
       else renderDailyCard();
     }
 
-    function switchDailyMode(mode) {
-      currentDailyMode = mode;
-      const btnFal = document.getElementById('btnModeFal');
-      const btnWisdom = document.getElementById('btnModeWisdom');
-      const cardEl = document.getElementById('dailyCardElement');
-      const badgeEl = document.getElementById('dailyCardBadge');
-      const metricsEl = document.getElementById('dailyMetricsGroup');
-      const authorEl = document.getElementById('dailyAuthorSign');
-
-      if (mode === 'fal') {
-        btnFal.classList.add('active');
-        btnWisdom.classList.remove('active');
-        cardEl.classList.remove('wisdom-theme');
-        badgeEl.textContent = '✨ Günün Falı';
-        badgeEl.classList.remove('wisdom-badge');
-        metricsEl.style.display = 'grid';
-        authorEl.style.display = 'none';
-      } else {
-        btnWisdom.classList.add('active');
-        btnFal.classList.remove('active');
-        cardEl.classList.add('wisdom-theme');
-        badgeEl.textContent = '🏛️ Günün Bilgeliği';
-        badgeEl.classList.add('wisdom-badge');
-        metricsEl.style.display = 'none';
-        authorEl.style.display = 'block';
-      }
-      renderDailyCard();
-      vibrate(15);
-    }
-
     function refreshDailyCard() {
-      // Fal üretimi
-      const rawFal = falList[Math.floor(Math.random() * falList.length)];
-      currentDailyData.fal = {
-        quote: typeof rawFal === 'string' ? rawFal : (rawFal.quote || rawFal.soz || ''),
-        num: Math.floor(Math.random() * 99) + 1,
-        rate: Math.floor(Math.random() * 36) + 65,
-        color: colorsList[Math.floor(Math.random() * colorsList.length)]
-      };
-
-      // Bilgelik üretimi
       const rawWisdom = wisdomList[Math.floor(Math.random() * wisdomList.length)];
       if (typeof rawWisdom === 'string') {
         const parts = rawWisdom.split(' - ');
-        currentDailyData.wisdom = {
+        currentDailyData = {
           quote: parts[0] || rawWisdom,
           author: parts[1] || 'Bilim İnsanı'
         };
       } else {
-        currentDailyData.wisdom = {
+        currentDailyData = {
           quote: rawWisdom.quote || rawWisdom.soz || rawWisdom.text || '',
           author: rawWisdom.author || rawWisdom.yazar || rawWisdom.kim || 'Düşünür'
         };
       }
 
       const todayKey = new Date().toISOString().slice(0, 10);
-      localStorage.setItem('sansa_birak_daily_store', JSON.stringify({
+      localStorage.setItem('sansa_birak_wisdom_store', JSON.stringify({
         date: todayKey,
         data: currentDailyData
       }));
@@ -1544,16 +1396,8 @@
     function renderDailyCard() {
       const qEl = document.getElementById('dailyQuoteText');
       const authorEl = document.getElementById('dailyAuthorSign');
-
-      if (currentDailyMode === 'fal') {
-        if (qEl) qEl.textContent = `"${currentDailyData.fal.quote}"`;
-        document.getElementById('dailyLuckyNumber').textContent = currentDailyData.fal.num;
-        document.getElementById('dailyLuckyRate').textContent = `%${currentDailyData.fal.rate}`;
-        document.getElementById('dailyLuckyColor').textContent = currentDailyData.fal.color;
-      } else {
-        if (qEl) qEl.textContent = `"${currentDailyData.wisdom.quote}"`;
-        if (authorEl) authorEl.textContent = `— ${currentDailyData.wisdom.author}`;
-      }
+      if (qEl) qEl.textContent = `"${currentDailyData.quote}"`;
+      if (authorEl) authorEl.textContent = `— ${currentDailyData.author}`;
     }
 
     // ==========================================
@@ -1693,18 +1537,16 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
-      const isWisdom = currentDailyMode === 'wisdom';
-
-      // Arka Plan
+      // Arka Plan (Derin Kozmik Bilgelik Gradyanı)
       const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1920);
       bgGrad.addColorStop(0, '#090d16');
-      bgGrad.addColorStop(0.4, isWisdom ? '#0e2438' : '#1e1b4b');
+      bgGrad.addColorStop(0.4, '#0e2438');
       bgGrad.addColorStop(1, '#090d16');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, 1080, 1920);
 
       const glowGrad = ctx.createRadialGradient(540, 600, 50, 540, 600, 500);
-      glowGrad.addColorStop(0, isWisdom ? 'rgba(6, 182, 212, 0.25)' : 'rgba(236, 72, 153, 0.25)');
+      glowGrad.addColorStop(0, 'rgba(6, 182, 212, 0.25)');
       glowGrad.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glowGrad;
       ctx.fillRect(0, 0, 1080, 1920);
@@ -1716,13 +1558,13 @@
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = '32px -apple-system, sans-serif';
-      ctx.fillText(isWisdom ? 'GÜNÜN BİLGELİĞİ & İLHAMI' : 'GÜNÜN ŞANS FALI & TAVSİYESİ', 540, 420);
+      ctx.fillText('GÜNÜN BİLGELİĞİ & İLHAMI', 540, 420);
 
-      // Kart
+      // Kart Çerçevesi
       const cardX = 90, cardY = 520, cardW = 900, cardH = 920;
       ctx.save();
       ctx.fillStyle = 'rgba(19, 27, 46, 0.88)';
-      ctx.strokeStyle = isWisdom ? 'rgba(6, 182, 212, 0.5)' : 'rgba(236, 72, 153, 0.5)';
+      ctx.strokeStyle = 'rgba(6, 182, 212, 0.5)';
       ctx.lineWidth = 4;
       ctx.beginPath();
       if (typeof ctx.roundRect === 'function') {
@@ -1733,7 +1575,7 @@
         ctx.lineTo(cardX + cardW - r, cardY);
         ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
         ctx.lineTo(cardX + cardW, cardY + cardH - r);
-        ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW, cardY + r);
+        ctx.quadraticCurveTo(cardX + cardW, cardY, cardX + cardW - r, cardY + cardH);
         ctx.lineTo(cardX + r, cardY + cardH);
         ctx.quadraticCurveTo(cardX, cardY + cardH, cardX, cardY + cardH - r);
         ctx.lineTo(cardX, cardY + r);
@@ -1743,29 +1585,35 @@
       ctx.stroke();
       ctx.restore();
 
-      ctx.fillStyle = isWisdom ? '#38bdf8' : '#ec4899';
+      ctx.fillStyle = '#38bdf8';
       ctx.font = 'bold 32px -apple-system, sans-serif';
-      ctx.fillText(isWisdom ? '🏛️ GÜNÜN BİLGE SÖZÜ' : '🔮 GÜNÜN MESAJI', 540, 620);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🏛️ GÜNÜN BİLGE SÖZÜ', 540, 620);
 
+      // Sözleri Satırlara Böl ve Dikey & Yatay Tam Ortala
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 44px -apple-system, sans-serif';
-      const quoteToDraw = isWisdom ? currentDailyData.wisdom.quote : currentDailyData.fal.quote;
-      wrapText(ctx, `"${quoteToDraw}"`, 540, 740, 760, 64);
+      const quoteToDraw = currentDailyData.quote;
+      const lines = getWrappedLines(ctx, `"${quoteToDraw}"`, 760);
+      const lineHeight = 64;
+      const textBlockHeight = (lines.length - 1) * lineHeight;
 
-      if (isWisdom) {
-        ctx.fillStyle = '#38bdf8';
-        ctx.font = 'italic bold 38px -apple-system, sans-serif';
-        ctx.fillText(`— ${currentDailyData.wisdom.author}`, 540, 1180);
-      } else {
-        const statY = 1140;
-        drawStoryStat(ctx, 230, statY, 'UĞURLU SAYI', currentDailyData.fal.num.toString());
-        drawStoryStat(ctx, 540, statY, 'ŞANS ORANI', `%${currentDailyData.fal.rate}`);
-        drawStoryStat(ctx, 850, statY, 'GÜNÜN RENGİ', currentDailyData.fal.color);
-      }
+      const authorGap = 80;
+      const totalBlockHeight = textBlockHeight + authorGap;
+      const startY = 990 - (totalBlockHeight / 2);
+
+      lines.forEach((line, idx) => {
+        ctx.fillText(line, 540, startY + (idx * lineHeight));
+      });
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'italic bold 38px -apple-system, sans-serif';
+      ctx.fillText(`— ${currentDailyData.author}`, 540, startY + textBlockHeight + authorGap);
 
       ctx.fillStyle = '#cbd5e1';
       ctx.font = '32px -apple-system, sans-serif';
-      ctx.fillText('Sen de kaderini gör ve şansa bırak 📲', 540, 1600);
+      ctx.fillText('Sen de ilhamını al ve şansa bırak 📲', 540, 1600);
       ctx.fillStyle = '#6366f1';
       ctx.font = 'bold 36px -apple-system, sans-serif';
       ctx.fillText('#ŞansaBırak', 540, 1660);
@@ -1774,7 +1622,7 @@
         const file = new File([blob], 'sansa-birak-story.png', { type: 'image/png' });
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
-            await navigator.share({ files: [file], title: 'Günün Mesajı' });
+            await navigator.share({ files: [file], title: 'Günün Bilgeliği' });
           } catch (e) {
             // Kullanıcı paylaşım menüsünü bilerek kapattıysa (İptal / Vazgeç) indirme yapma
             if (e.name === 'AbortError') return;
@@ -1787,6 +1635,7 @@
     }
 
     function drawStoryStat(ctx, x, y, label, val) {
+      ctx.textAlign = 'center';
       ctx.fillStyle = '#94a3b8';
       ctx.font = '24px -apple-system, sans-serif';
       ctx.fillText(label, x, y);
@@ -1795,18 +1644,21 @@
       ctx.fillText(val, x, y + 54);
     }
 
-    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    function getWrappedLines(ctx, text, maxWidth) {
       const words = text.split(' ');
-      let line = '';
+      const lines = [];
+      let currentLine = '';
       for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' ';
+        const testLine = currentLine ? currentLine + ' ' + words[n] : words[n];
         if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-          ctx.fillText(line, x, y);
-          line = words[n] + ' ';
-          y += lineHeight;
-        } else { line = testLine; }
+          lines.push(currentLine.trim());
+          currentLine = words[n];
+        } else {
+          currentLine = testLine;
+        }
       }
-      ctx.fillText(line, x, y);
+      if (currentLine) lines.push(currentLine.trim());
+      return lines;
     }
 
     function fallbackDownload(blob) {
